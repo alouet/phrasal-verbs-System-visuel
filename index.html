@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#05060f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Le Système Visuel des Phrasal Verbs</title>
+<style>
+/* =========================================================
+   LE SYSTÈME VISUEL DES PHRASAL VERBS
+   Fichier unique - 100% hors ligne - aucune dépendance
+   ========================================================= */
+
+/* ---------- Variables de thème ---------- */
+:root{
+  --bg-0:#05060f;
+  --bg-1:#0a0e23;
+  --bg-2:#0e1430;
+  --ink:#eaf0ff;
+  --ink-dim:#9fb0d8;
+  --ink-faint:#6c7bab;
+  --accent:#5b8cff;
+  --accent-2:#7c5cff;
+  --cyan:#34e1ff;
+  --pink:#ff5cae;
+  --gold:#ffd166;
+  --green:#39e6a8;
+  --red:#ff6b6b;
+  --card:rgba(20,28,58,.55);
+  --card-brd:rgba(120,150,255,.18);
+  --glow:0 0 40px rgba(91,140,255,.35);
+  --radius:22px;
+  --font:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{
+  font-family:var(--font);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 80% -10%, rgba(124,92,255,.20), transparent 60%),
+    radial-gradient(900px 600px at 0% 110%, rgba(52,225,255,.14), transparent 55%),
+    linear-gradient(180deg,var(--bg-1),var(--bg-0));
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* fond particules */
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column}
+
+/* ---------- Barre supérieure ---------- */
+.topbar{
+  position:sticky;top:0;z-index:30;
+  display:flex;align-items:center;gap:14px;
+  padding:14px clamp(16px,4vw,40px);
+  backdrop-filter:blur(14px);
+  background:linear-gradient(180deg,rgba(8,11,28,.85),rgba(8,11,28,.35));
+  border-bottom:1px solid rgba(120,150,255,.12);
+}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;user-select:none}
+.brand .logo{
+  width:38px;height:38px;border-radius:12px;flex:0 0 auto;
+  background:conic-gradient(from 210deg,var(--cyan),var(--accent),var(--accent-2),var(--pink),var(--cyan));
+  box-shadow:var(--glow);position:relative;animation:spin 14s linear infinite;
+}
+.brand .logo::after{content:"";position:absolute;inset:5px;border-radius:8px;background:var(--bg-1)}
+.brand .logo::before{content:"PV";position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:13px;letter-spacing:1px;z-index:2;color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.brand b{font-size:15px;letter-spacing:.5px}
+.brand span{display:block;font-size:11px;color:var(--ink-faint);letter-spacing:.5px}
+
+.topnav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+.topnav button{
+  background:transparent;border:1px solid transparent;color:var(--ink-dim);
+  padding:8px 14px;border-radius:12px;cursor:pointer;font-size:13px;font-weight:600;
+  transition:.2s;font-family:var(--font)
+}
+.topnav button:hover{color:#fff;background:rgba(91,140,255,.12)}
+.topnav button.active{color:#fff;background:linear-gradient(135deg,rgba(91,140,255,.3),rgba(124,92,255,.3));border-color:var(--card-brd)}
+
+.xpwrap{display:flex;align-items:center;gap:10px;margin-left:8px}
+.xpbadge{
+  display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:30px;
+  background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.3);font-size:12px;font-weight:700;color:var(--gold)
+}
+.lvl{font-size:11px;color:var(--ink-dim)}
+
+/* ---------- Conteneur de vues ---------- */
+.view{display:none;animation:fadeUp .55s cubic-bezier(.2,.8,.2,1) both;padding:clamp(18px,4vw,44px);max-width:1240px;margin:0 auto;width:100%}
+.view.show{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+
+/* ---------- Accueil ---------- */
+.hero{text-align:center;padding:min(7vh,70px) 10px 30px}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:3px;color:var(--cyan);
+  border:1px solid rgba(52,225,255,.3);padding:6px 14px;border-radius:30px;margin-bottom:26px;text-transform:uppercase;
+  background:rgba(52,225,255,.06)}
+.hero h1{
+  font-size:clamp(34px,7vw,72px);line-height:1.02;margin:0 0 18px;font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(120deg,#fff 10%,var(--cyan) 45%,var(--accent-2) 80%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 6px 30px rgba(91,140,255,.4))
+}
+.hero p.sub{font-size:clamp(15px,2.4vw,21px);color:var(--ink-dim);max-width:680px;margin:0 auto 34px;line-height:1.5}
+.cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:42px}
+.btn{
+  border:none;cursor:pointer;font-family:var(--font);font-weight:700;font-size:15px;
+  padding:15px 28px;border-radius:16px;transition:.22s;display:inline-flex;align-items:center;gap:10px
+}
+.btn-primary{color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 10px 30px rgba(91,140,255,.4)}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 44px rgba(124,92,255,.55)}
+.btn-ghost{color:#fff;background:rgba(255,255,255,.06);border:1px solid var(--card-brd)}
+.btn-ghost:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+
+.progress-card{max-width:640px;margin:0 auto 40px;background:var(--card);border:1px solid var(--card-brd);
+  border-radius:var(--radius);padding:22px 24px;backdrop-filter:blur(12px)}
+.progress-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:13px;color:var(--ink-dim)}
+.bar{height:12px;border-radius:30px;background:rgba(255,255,255,.08);overflow:hidden}
+.bar > i{display:block;height:100%;width:0;border-radius:30px;
+  background:linear-gradient(90deg,var(--cyan),var(--accent),var(--accent-2));
+  box-shadow:0 0 18px rgba(91,140,255,.6);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.stats-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.stat{background:var(--card);border:1px solid var(--card-brd);border-radius:16px;padding:14px 20px;min-width:120px;text-align:center;backdrop-filter:blur(10px)}
+.stat b{display:block;font-size:26px;background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat span{font-size:11px;color:var(--ink-faint);letter-spacing:1px;text-transform:uppercase}
+
+.section-title{font-size:clamp(20px,3vw,30px);font-weight:800;margin:46px 0 6px;text-align:center}
+.section-sub{text-align:center;color:var(--ink-dim);margin:0 0 30px;font-size:14px}
+
+/* grille particules */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.pcard{
+  position:relative;cursor:pointer;border-radius:20px;padding:22px 16px;overflow:hidden;
+  background:var(--card);border:1px solid var(--card-brd);backdrop-filter:blur(10px);
+  transition:.25s;text-align:center;min-height:150px;display:flex;flex-direction:column;justify-content:center;gap:8px
+}
+.pcard:hover{transform:translateY(-6px);border-color:rgba(124,92,255,.55);box-shadow:0 18px 50px rgba(40,30,90,.6)}
+.pcard .pname{font-size:26px;font-weight:900;letter-spacing:1px}
+.pcard .pgloss{font-size:11.5px;color:var(--ink-dim);line-height:1.35}
+.pcard .pchip{position:absolute;top:10px;right:10px;font-size:10px;padding:3px 8px;border-radius:20px;background:rgba(57,230,168,.15);color:var(--green);border:1px solid rgba(57,230,168,.3)}
+.pcard .pchip.todo{background:rgba(255,255,255,.06);color:var(--ink-faint);border-color:rgba(255,255,255,.12)}
+.pcard .auraB{position:absolute;inset:auto -40% -60% -40%;height:120px;border-radius:50%;filter:blur(40px);opacity:.5;transition:.3s}
+.pcard:hover .auraB{opacity:.9}
+
+/* feature tiles on home */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:8px}
+.feat{background:var(--card);border:1px solid var(--card-brd);border-radius:20px;padding:22px;cursor:pointer;transition:.25s;backdrop-filter:blur(10px)}
+.feat:hover{transform:translateY(-5px);border-color:rgba(91,140,255,.5);box-shadow:var(--glow)}
+.feat .ico{font-size:30px;margin-bottom:10px}
+.feat h3{margin:0 0 6px;font-size:17px}
+.feat p{margin:0;font-size:13px;color:var(--ink-dim);line-height:1.45}
+
+/* ---------- Module particule ---------- */
+.mod-head{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+.backbtn{background:rgba(255,255,255,.06);border:1px solid var(--card-brd);color:var(--ink);
+  padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:600;font-family:var(--font);transition:.2s;font-size:13px}
+.backbtn:hover{background:rgba(255,255,255,.13);transform:translateX(-3px)}
+.mod-title{font-size:clamp(30px,7vw,60px);font-weight:900;letter-spacing:2px;
+  background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mod-gloss{color:var(--ink-dim);font-size:15px}
+
+.mod-layout{display:grid;grid-template-columns:300px 1fr;gap:26px;margin-top:24px}
+@media(max-width:860px){.mod-layout{grid-template-columns:1fr}}
+
+/* cercle central + carte mentale */
+.orbit{position:relative;min-height:300px;display:flex;align-items:center;justify-content:center}
+.core{
+  width:160px;height:160px;border-radius:50%;display:grid;place-items:center;font-size:42px;font-weight:900;color:#fff;
+  background:radial-gradient(circle at 30% 25%,rgba(124,92,255,.9),rgba(40,30,90,.6));
+  border:2px solid rgba(124,180,255,.5);box-shadow:0 0 60px rgba(124,92,255,.55),inset 0 0 30px rgba(255,255,255,.1);
+  animation:pulse 3.4s ease-in-out infinite;position:relative;z-index:2
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.ring{position:absolute;border-radius:50%;border:1px dashed rgba(124,160,255,.3);animation:spin 24s linear infinite}
+.ring.r1{width:230px;height:230px}
+.ring.r2{width:290px;height:290px;animation-duration:34s;animation-direction:reverse;border-color:rgba(52,225,255,.18)}
+
+.sense-list{display:flex;flex-direction:column;gap:12px}
+.sense-btn{
+  text-align:left;cursor:pointer;border-radius:16px;padding:16px 18px;width:100%;
+  background:var(--card);border:1px solid var(--card-brd);color:var(--ink);transition:.22s;font-family:var(--font);
+  display:flex;gap:14px;align-items:center
+}
+.sense-btn:hover{transform:translateX(4px);border-color:rgba(91,140,255,.55)}
+.sense-btn.active{background:linear-gradient(135deg,rgba(91,140,255,.28),rgba(124,92,255,.22));border-color:rgba(124,160,255,.6);box-shadow:var(--glow)}
+.sense-btn .em{font-size:26px;flex:0 0 auto}
+.sense-btn .tt{font-weight:800;font-size:15px}
+.sense-btn .ex{font-size:12px;color:var(--ink-dim);margin-top:2px}
+
+/* panneau de sens détaillé */
+.sense-detail{background:var(--card);border:1px solid var(--card-brd);border-radius:var(--radius);
+  padding:clamp(18px,3vw,30px);backdrop-filter:blur(12px);min-height:380px}
+.sd-top{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.svgstage{width:200px;height:170px;flex:0 0 auto;border-radius:18px;background:linear-gradient(160deg,rgba(10,14,40,.9),rgba(20,28,60,.7));
+  border:1px solid var(--card-brd);display:grid;place-items:center;overflow:hidden;position:relative}
+.sd-meta{flex:1;min-width:200px}
+.sd-meta h2{margin:0 0 6px;font-size:24px}
+.sd-meta .explain{color:var(--ink);font-size:15px;line-height:1.5;margin:0 0 12px}
+.metaphor{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--cyan);
+  background:rgba(52,225,255,.08);border:1px solid rgba(52,225,255,.25);border-radius:12px;padding:8px 12px;margin-bottom:6px}
+.examples{margin-top:18px;display:grid;gap:8px}
+.exrow{display:flex;justify-content:space-between;gap:14px;align-items:center;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:11px 15px;transition:.2s}
+.exrow:hover{background:rgba(91,140,255,.12)}
+.exrow b{font-size:15px}
+.exrow span{color:var(--ink-dim);font-size:13px;text-align:right}
+.tipbox{margin-top:16px;background:rgba(255,209,102,.08);border:1px solid rgba(255,209,102,.25);border-radius:14px;padding:14px 16px;font-size:13.5px;line-height:1.5}
+.tipbox b{color:var(--gold)}
+.nav-senses{display:flex;justify-content:space-between;margin-top:18px;gap:10px}
+
+/* ---------- Découverte ---------- */
+.center-card{max-width:680px;margin:10px auto;background:var(--card);border:1px solid var(--card-brd);
+  border-radius:var(--radius);padding:clamp(22px,4vw,38px);text-align:center;backdrop-filter:blur(12px)}
+.disc-pv{font-size:clamp(34px,8vw,62px);font-weight:900;letter-spacing:2px;margin:10px 0 4px;
+  background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.disc-q{color:var(--ink-dim);margin-bottom:22px}
+.reveal{display:grid;gap:14px;margin-top:14px;opacity:0;max-height:0;overflow:hidden;transition:.55s}
+.reveal.show{opacity:1;max-height:600px;margin-top:24px}
+.eqline{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;font-size:18px}
+.piece{background:rgba(91,140,255,.14);border:1px solid var(--card-brd);border-radius:14px;padding:12px 18px}
+.piece b{display:block;font-size:20px}
+.piece span{font-size:12px;color:var(--ink-dim)}
+.op{font-size:26px;color:var(--ink-faint)}
+.result-pill{display:inline-block;margin-top:6px;background:linear-gradient(135deg,rgba(57,230,168,.2),rgba(52,225,255,.16));
+  border:1px solid rgba(57,230,168,.4);border-radius:16px;padding:14px 22px;font-size:18px;font-weight:800}
+.result-pill .fr{color:var(--green)}
+
+/* ---------- Constructeur ---------- */
+.builder-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px}
+@media(max-width:760px){.builder-grid{grid-template-columns:1fr}}
+.chooser{background:var(--card);border:1px solid var(--card-brd);border-radius:18px;padding:18px;backdrop-filter:blur(10px)}
+.chooser h4{margin:0 0 12px;font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-dim)}
+.chip-wrap{display:flex;flex-wrap:wrap;gap:8px;max-height:260px;overflow:auto}
+.chip{cursor:pointer;border:1px solid var(--card-brd);background:rgba(255,255,255,.05);color:var(--ink);
+  padding:9px 14px;border-radius:30px;font-size:13px;font-weight:600;transition:.18s;font-family:var(--font)}
+.chip:hover{background:rgba(91,140,255,.18)}
+.chip.sel{background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent;box-shadow:0 6px 20px rgba(91,140,255,.45)}
+.build-out{margin-top:18px;text-align:center;background:var(--card);border:1px solid var(--card-brd);border-radius:var(--radius);padding:26px;backdrop-filter:blur(12px)}
+
+/* ---------- Quiz ---------- */
+.quiz-card{max-width:680px;margin:0 auto;background:var(--card);border:1px solid var(--card-brd);border-radius:var(--radius);padding:clamp(22px,4vw,34px);backdrop-filter:blur(12px)}
+.quiz-prog{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-dim);margin-bottom:14px}
+.quiz-q{font-size:clamp(18px,3vw,24px);font-weight:800;text-align:center;margin:8px 0 22px}
+.quiz-opts{display:grid;gap:12px}
+.qopt{cursor:pointer;border:1px solid var(--card-brd);background:rgba(255,255,255,.05);color:var(--ink);
+  padding:15px 18px;border-radius:14px;font-size:15px;font-weight:700;text-align:left;transition:.18s;font-family:var(--font);display:flex;align-items:center;gap:12px}
+.qopt:hover{background:rgba(91,140,255,.15);transform:translateX(3px)}
+.qopt .k{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:13px}
+.qopt.correct{background:rgba(57,230,168,.2);border-color:var(--green)}
+.qopt.wrong{background:rgba(255,107,107,.18);border-color:var(--red)}
+.qopt:disabled{cursor:default}
+.quiz-result{text-align:center}
+.quiz-result .big{font-size:54px;font-weight:900;background:linear-gradient(120deg,var(--gold),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- Flashcards ---------- */
+.fc-stage{max-width:520px;margin:0 auto;perspective:1400px}
+.flashcard{position:relative;width:100%;min-height:330px;cursor:pointer;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.flashcard.flip{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--radius);
+  border:1px solid var(--card-brd);padding:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  background:var(--card);backdrop-filter:blur(12px)}
+.fc-back{transform:rotateY(180deg);background:linear-gradient(160deg,rgba(20,28,60,.85),rgba(30,20,60,.7))}
+.fc-front .pv{font-size:clamp(30px,7vw,50px);font-weight:900;background:linear-gradient(120deg,#fff,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.fc-hint{margin-top:14px;font-size:12px;color:var(--ink-faint)}
+.fc-back .fr{font-size:24px;font-weight:800;color:var(--green);margin-bottom:8px}
+.fc-back .ex{font-size:14px;color:var(--ink-dim);font-style:italic}
+.fc-nav{display:flex;justify-content:center;gap:12px;margin-top:22px;align-items:center}
+.fc-count{font-size:13px;color:var(--ink-dim);min-width:70px;text-align:center}
+
+/* ---------- Carte géante ---------- */
+.mapwrap{position:relative;overflow:auto;border:1px solid var(--card-brd);border-radius:var(--radius);background:rgba(8,11,28,.4);backdrop-filter:blur(8px)}
+.mind{position:relative;min-width:760px;min-height:520px;margin:auto}
+.mnode{position:absolute;transform:translate(-50%,-50%);cursor:pointer;border-radius:16px;padding:12px 16px;text-align:center;
+  background:var(--card);border:1px solid var(--card-brd);transition:.2s;font-weight:700;backdrop-filter:blur(6px);font-size:13px}
+.mnode:hover{transform:translate(-50%,-50%) scale(1.12);border-color:var(--accent);box-shadow:var(--glow);z-index:5}
+.mnode.center{padding:22px 26px;font-size:18px;font-weight:900;
+  background:radial-gradient(circle at 30% 25%,rgba(124,92,255,.85),rgba(40,30,90,.6));border-color:rgba(124,160,255,.5);box-shadow:0 0 50px rgba(124,92,255,.5)}
+.mnode small{display:block;font-size:10px;color:var(--ink-dim);font-weight:600;margin-top:3px}
+
+/* ---------- Notifications / badges ---------- */
+.toast-wrap{position:fixed;right:18px;bottom:18px;z-index:90;display:flex;flex-direction:column;gap:10px}
+.toast{background:linear-gradient(135deg,rgba(20,28,60,.96),rgba(30,20,60,.92));border:1px solid var(--card-brd);
+  border-radius:16px;padding:14px 18px;min-width:240px;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  display:flex;gap:12px;align-items:center;animation:toastIn .4s cubic-bezier(.2,.8,.2,1) both}
+.toast .ic{font-size:26px}
+.toast b{display:block;font-size:14px}
+.toast span{font-size:12px;color:var(--ink-dim)}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+
+.badge-rail{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.bdg{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:30px;font-size:12px;font-weight:700;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--ink-faint);transition:.3s}
+.bdg.on{background:rgba(255,209,102,.14);border-color:rgba(255,209,102,.4);color:var(--gold);box-shadow:0 0 18px rgba(255,209,102,.25)}
+
+footer{margin-top:auto;text-align:center;padding:30px;color:var(--ink-faint);font-size:12px}
+
+/* utilitaires SVG anim */
+.svgstage svg{width:100%;height:100%}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes riseUp{0%{transform:translateY(34px);opacity:.2}60%{opacity:1}100%{transform:translateY(-6px);opacity:1}}
+@keyframes growBar{from{transform:scaleY(.15)}to{transform:scaleY(1)}}
+@keyframes drain{0%{height:90px}100%{height:6px}}
+@keyframes stack{0%{transform:translateY(-40px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes wave{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes dashmove{to{stroke-dashoffset:-200}}
+@keyframes flagWave{0%,100%{transform:skewX(0)}50%{transform:skewX(-10deg)}}
+@keyframes shrink{0%,100%{transform:scale(1)}50%{transform:scale(.6);opacity:.5}}
+@keyframes slideOut{0%{transform:translateX(-30px);opacity:.2}100%{transform:translateX(30px);opacity:1}}
+@keyframes glowPulse{0%,100%{opacity:.4;r:8}50%{opacity:1;r:26}}
+@keyframes spinSlow{to{transform:rotate(360deg)}}
+@keyframes orbitDot{from{transform:rotate(0) translateX(60px) rotate(0)}to{transform:rotate(360deg) translateX(60px) rotate(-360deg)}}
+.hidden{display:none!important}
+
+/* ---------- Bouton son ---------- */
+.sndbtn{
+  width:42px;height:42px;min-width:42px;border-radius:12px;cursor:pointer;font-size:18px;
+  background:rgba(255,255,255,.06);border:1px solid var(--card-brd);color:var(--ink);
+  display:grid;place-items:center;transition:.2s;font-family:var(--font)
+}
+.sndbtn:hover{background:rgba(91,140,255,.18)}
+.sndbtn.off{opacity:.5;filter:grayscale(.6)}
+.sndbtn:active{transform:scale(.9)}
+
+/* ---------- Effet ripple tactile ---------- */
+.rippleHost{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;transform:scale(0);pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.45),rgba(255,255,255,0) 70%);
+  animation:rippleGo .6s ease-out forwards;mix-blend-mode:screen}
+@keyframes rippleGo{to{transform:scale(2.6);opacity:0}}
+/* feedback tactile générique : enfoncement */
+.btn,.sense-btn,.qopt,.chip,.feat,.pcard,.backbtn,.mnode,.topnav button,.botnav button,.exrow{transition:transform .12s ease, box-shadow .2s, background .2s, border-color .2s}
+.btn:active,.sense-btn:active,.qopt:active,.chip:active,.feat:active,.pcard:active,.backbtn:active,.mnode:active{transform:scale(.96)}
+
+/* ---------- Barre de navigation inférieure (mobile) ---------- */
+.botnav{display:none}
+@media(max-width:768px){
+  .botnav{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:2px;
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    background:linear-gradient(0deg,rgba(6,8,20,.97),rgba(8,11,28,.86));
+    backdrop-filter:blur(18px);border-top:1px solid rgba(120,150,255,.16)
+  }
+  .botnav button{
+    background:transparent;border:none;color:var(--ink-faint);cursor:pointer;font-family:var(--font);
+    display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;border-radius:14px;
+    min-height:52px;transition:.2s;position:relative
+  }
+  .botnav button .bi{font-size:19px;line-height:1;transition:transform .25s}
+  .botnav button .bl{font-size:9.5px;font-weight:700;letter-spacing:.2px}
+  .botnav button.active{color:#fff}
+  .botnav button.active .bi{transform:translateY(-2px) scale(1.18)}
+  .botnav button.active::before{content:"";position:absolute;top:2px;width:26px;height:3px;border-radius:3px;
+    background:linear-gradient(90deg,var(--cyan),var(--accent-2));box-shadow:0 0 10px rgba(91,140,255,.7)}
+  .botnav button:active{transform:scale(.9)}
+}
+
+/* =========================================================
+   RESPONSIVE MOBILE-FIRST (320px → 768px)
+   ========================================================= */
+@media(max-width:768px){
+  /* le contenu ne passe jamais sous la barre du bas */
+  .app{padding-bottom:74px}
+  body{font-size:15px}
+  /* topbar compacte : on masque la nav du haut au profit de la nav du bas */
+  .topnav{display:none}
+  .topbar{padding:10px 14px;gap:8px;position:sticky}
+  .brand .logo{width:32px;height:32px}
+  .brand b{font-size:13px}
+  .brand span{font-size:9.5px}
+  .xpwrap{margin-left:auto;gap:7px}
+  .xpbadge{padding:5px 9px;font-size:11px}
+  .lvl{font-size:10px}
+
+  .view{padding:16px 15px 8px}
+  .hero{padding:22px 4px 14px}
+  .eyebrow{font-size:10px;letter-spacing:1.6px;margin-bottom:16px;padding:5px 11px}
+  .hero h1{font-size:clamp(28px,9vw,40px);letter-spacing:-.5px;margin-bottom:12px}
+  .hero p.sub{font-size:15px;margin-bottom:22px}
+
+  /* boutons : cible tactile ≥ 44px, pleine largeur agréable */
+  .cta-row{flex-direction:column;gap:10px}
+  .cta-row .btn{width:100%;justify-content:center}
+  .btn{padding:15px 22px;min-height:50px;font-size:15px}
+
+  .progress-card{padding:16px;margin-bottom:22px}
+  .badge-rail{gap:7px}
+  .bdg{padding:7px 11px;font-size:11px}
+
+  /* stats : grille 2 colonnes au lieu d'une rangée qui déborde */
+  .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .stat{min-width:0;padding:12px 8px}
+  .stat b{font-size:22px}
+
+  .section-title{font-size:21px;margin:34px 0 4px}
+  .section-sub{font-size:13px;margin-bottom:20px}
+
+  /* grille particules : 2 par ligne, lisible et cliquable */
+  .pgrid{grid-template-columns:1fr 1fr;gap:11px}
+  .pcard{min-height:120px;padding:18px 12px;border-radius:18px}
+  .pcard .pname{font-size:23px}
+  .pcard .pgloss{font-size:11px}
+
+  .feat-grid{grid-template-columns:1fr;gap:11px}
+  .feat{padding:18px}
+
+  /* module particule : tout en colonne */
+  .mod-layout{grid-template-columns:1fr;gap:16px}
+  .mod-title{font-size:clamp(34px,11vw,52px)}
+  .orbit{min-height:230px}
+  .core{width:120px;height:120px;font-size:32px}
+  .ring.r1{width:175px;height:175px}.ring.r2{width:215px;height:215px}
+  .sense-btn{padding:14px 14px;min-height:56px}
+  .sense-btn .em{font-size:23px}
+  .sd-top{flex-direction:column;align-items:center;text-align:center}
+  .svgstage{width:100%;max-width:240px;height:160px}
+  .sd-meta{min-width:0;text-align:center}
+  .metaphor{text-align:left}
+  .examples{margin-top:14px}
+  .exrow{padding:12px 14px;min-height:46px}
+  .exrow b{font-size:15px}
+  .nav-senses{flex-direction:row}
+  .nav-senses .backbtn{flex:1;min-height:48px}
+
+  /* découverte */
+  .center-card{padding:22px 16px}
+  .disc-pv{font-size:clamp(32px,11vw,46px)}
+  .eqline{gap:8px}
+  .piece{padding:11px 13px}
+  .piece b{font-size:18px}
+
+  /* constructeur */
+  .builder-grid{grid-template-columns:1fr;gap:12px}
+  .chip-wrap{max-height:180px}
+  .chip{padding:11px 15px;min-height:44px;display:inline-flex;align-items:center}
+  .build-out{padding:20px 16px}
+
+  /* quiz */
+  .quiz-card{padding:20px 16px}
+  .quiz-q{font-size:19px;margin:6px 0 18px}
+  .qopt{padding:15px 15px;min-height:54px;font-size:15px}
+
+  /* flashcards */
+  .fc-stage{max-width:100%}
+  .flashcard{min-height:300px}
+  .fc-face{padding:22px}
+  .fc-nav .btn{min-width:58px;padding:13px 16px}
+
+  /* carte géante : on remplace la carte radiale (qui déborde) par une grille scrollable */
+  .mapwrap{overflow:visible;background:transparent;border:none}
+  .mind{display:grid!important;grid-template-columns:1fr 1fr;gap:11px;
+    position:static!important;min-width:0!important;width:100%!important;height:auto!important;padding:2px}
+  .mind > svg{display:none!important}
+  .mnode{position:static!important;transform:none!important;width:100%;padding:16px 12px;font-size:15px}
+  .mnode:hover{transform:scale(1.02)!important}
+  .mnode.center{grid-column:1 / -1;font-size:18px;padding:20px}
+
+  .toast-wrap{right:10px;left:10px;bottom:84px}
+  .toast{min-width:0;width:100%}
+  footer{padding:22px 16px 10px;font-size:11px}
+}
+
+/* très petits écrans (≤400px) */
+@media(max-width:400px){
+  .brand span{display:none}
+  .brand b{font-size:12px}
+  .xpbadge{padding:4px 8px;font-size:10.5px}
+}
+@media(max-width:360px){
+  .pgrid{gap:9px}
+  .pcard .pname{font-size:21px}
+  .botnav{grid-template-columns:repeat(6,1fr)}
+  .botnav button .bl{font-size:8px}
+  .botnav button .bi{font-size:17px}
+  .stat b{font-size:20px}
+  .hero h1{font-size:26px}
+  .lvl{display:none}
+}
+
+/* paysage mobile (peu de hauteur) : on resserre le vertical */
+@media(max-height:500px) and (orientation:landscape){
+  .hero{padding:14px 4px 8px}
+  .hero h1{font-size:30px;margin-bottom:8px}
+  .orbit{min-height:180px}
+  .core{width:100px;height:100px;font-size:26px}
+  .flashcard{min-height:240px}
+  .botnav button .bl{display:none}
+  .botnav button{min-height:44px}
+}
+
+/* confort tactile global : pas de surlignage bleu, défilement fluide */
+@media(hover:none){
+  .pcard:hover,.feat:hover,.sense-btn:hover,.qopt:hover,.chip:hover{transform:none}
+  *{-webkit-touch-callout:none}
+}
+button{touch-action:manipulation}
+.mapwrap{-webkit-overflow-scrolling:touch}
+
+/* Respect du réglage système « réduire les animations » + mode économie */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.08s!important}
+  .brand .logo,.ring,.core{animation:none!important}
+}
+body.lowpower #bgCanvas{display:none}
+body.lowpower .ring,body.lowpower .brand .logo{animation:none!important}
+body.lowpower .core{animation:none!important}
+body.lowpower .svgstage [style*="animation"]{animation:none!important}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<div class="toast-wrap" id="toasts"></div>
+
+<div class="app">
+  <!-- Barre supérieure -->
+  <div class="topbar">
+    <div class="brand" onclick="go('home')">
+      <div class="logo"></div>
+      <div><b>PHRASAL&nbsp;VERBS</b><span>Système visuel</span></div>
+    </div>
+    <div class="topnav" id="topnav">
+      <button data-nav="home" class="active" onclick="go('home')">Accueil</button>
+      <button data-nav="discover" onclick="go('discover')">Découverte</button>
+      <button data-nav="builder" onclick="go('builder')">Constructeur</button>
+      <button data-nav="quiz" onclick="go('quiz')">Quiz</button>
+      <button data-nav="flash" onclick="go('flash')">Flashcards</button>
+      <button data-nav="map" onclick="go('map')">Carte géante</button>
+    </div>
+    <div class="xpwrap">
+      <button class="sndbtn" id="sndBtn" onclick="toggleSound(event)" aria-label="Activer/couper le son" title="Son">🔊</button>
+      <div class="xpbadge">⚡ <span id="xpval">0</span> XP</div>
+      <div class="lvl">Niv. <b id="lvlval">1</b></div>
+    </div>
+  </div>
+
+  <!-- Barre de navigation inférieure (mobile, usage à une main) -->
+  <nav class="botnav" id="botnav">
+    <button data-nav="home" class="active" onclick="go('home')"><span class="bi">🏠</span><span class="bl">Accueil</span></button>
+    <button data-nav="discover" onclick="go('discover')"><span class="bi">🔍</span><span class="bl">Découvrir</span></button>
+    <button data-nav="builder" onclick="go('builder')"><span class="bi">🧩</span><span class="bl">Construire</span></button>
+    <button data-nav="quiz" onclick="go('quiz')"><span class="bi">🎯</span><span class="bl">Quiz</span></button>
+    <button data-nav="flash" onclick="go('flash')"><span class="bi">🃏</span><span class="bl">Cartes</span></button>
+    <button data-nav="map" onclick="go('map')"><span class="bi">🗺️</span><span class="bl">Carte</span></button>
+  </nav>
+
+  <!-- ============ ACCUEIL ============ -->
+  <section class="view show" id="view-home">
+    <div class="hero">
+      <span class="eyebrow">Apprentissage accéléré · Méthode intuitive</span>
+      <h1>Le Système Visuel<br>des Phrasal Verbs</h1>
+      <p class="sub">Comprenez le <b>sens des particules</b> et devinez la signification de milliers de phrasal verbs — sans apprendre par cœur.</p>
+      <div class="cta-row">
+        <button class="btn btn-primary" onclick="go('discover')">🚀 Commencer la découverte</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('particle-grid').scrollIntoView({behavior:'smooth'})">🧭 Explorer les particules</button>
+      </div>
+    </div>
+
+    <div class="progress-card">
+      <div class="progress-head"><span>Progression globale</span><span id="progtxt">0 / 16 particules</span></div>
+      <div class="bar"><i id="progbar"></i></div>
+      <div class="badge-rail" id="badgeRail"></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><b id="st-particles">16</b><span>Particules</span></div>
+      <div class="stat"><b id="st-senses">0</b><span>Sens étudiés</span></div>
+      <div class="stat"><b id="st-xp">0</b><span>XP gagnés</span></div>
+      <div class="stat"><b id="st-badges">0</b><span>Badges</span></div>
+    </div>
+
+    <h2 class="section-title" id="particle-grid">Les 16 particules essentielles</h2>
+    <p class="section-sub">Cliquez sur une particule pour ouvrir son module visuel interactif.</p>
+    <div class="pgrid" id="pgrid"></div>
+
+    <h2 class="section-title">5 modes d'apprentissage</h2>
+    <p class="section-sub">Une plateforme complète pour ancrer le sens profondément.</p>
+    <div class="feat-grid">
+      <div class="feat" onclick="go('discover')"><div class="ico">🔍</div><h3>Mode Découverte</h3><p>Devinez le sens d'un phrasal verb, puis l'animation révèle la logique cachée.</p></div>
+      <div class="feat" onclick="go('builder')"><div class="ico">🧩</div><h3>Constructeur</h3><p>Combinez un verbe + une particule et voyez le sens imagé se former.</p></div>
+      <div class="feat" onclick="go('quiz')"><div class="ico">🎯</div><h3>Quiz visuel</h3><p>Associez chaque idée à la bonne particule. Score en temps réel.</p></div>
+      <div class="feat" onclick="go('flash')"><div class="ico">🃏</div><h3>Flashcards</h3><p>Recto phrasal verb, verso animation + traduction. Mémoire active.</p></div>
+      <div class="feat" onclick="go('map')"><div class="ico">🗺️</div><h3>Carte géante</h3><p>Une carte mentale globale de toutes les particules et leurs sens.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ MODULE PARTICULE ============ -->
+  <section class="view" id="view-particle">
+    <button class="backbtn" onclick="go('home')">← Toutes les particules</button>
+    <div class="mod-head" style="margin-top:18px">
+      <div>
+        <div class="mod-title" id="modTitle">UP</div>
+        <div class="mod-gloss" id="modGloss"></div>
+      </div>
+    </div>
+    <div class="mod-layout">
+      <div>
+        <div class="orbit">
+          <div class="ring r1"></div><div class="ring r2"></div>
+          <div class="core" id="modCore">UP</div>
+        </div>
+        <div class="sense-list" id="senseList"></div>
+      </div>
+      <div class="sense-detail" id="senseDetail"></div>
+    </div>
+  </section>
+
+  <!-- ============ DÉCOUVERTE ============ -->
+  <section class="view" id="view-discover">
+    <h2 class="section-title">Mode Découverte</h2>
+    <p class="section-sub">Lisez le phrasal verb, devinez son sens… puis révélez la logique.</p>
+    <div class="center-card">
+      <div style="font-size:13px;color:var(--ink-faint);letter-spacing:2px">DEVINEZ LE SENS</div>
+      <div class="disc-pv" id="discPv">GET UP</div>
+      <div class="disc-q" id="discQ">Que signifie ce phrasal verb&nbsp;?</div>
+      <button class="btn btn-primary" id="discBtn" onclick="discReveal()">💡 Révéler la logique</button>
+      <div class="reveal" id="discReveal"></div>
+      <div style="margin-top:24px"><button class="btn btn-ghost" onclick="discNext()">↻ Autre phrasal verb</button></div>
+    </div>
+  </section>
+
+  <!-- ============ CONSTRUCTEUR ============ -->
+  <section class="view" id="view-builder">
+    <h2 class="section-title">Constructeur de sens</h2>
+    <p class="section-sub">Choisissez un verbe et une particule. Observez le sens imagé se former.</p>
+    <div class="builder-grid">
+      <div class="chooser"><h4>① Verbe</h4><div class="chip-wrap" id="verbChips"></div></div>
+      <div class="chooser"><h4>② Particule</h4><div class="chip-wrap" id="partChips"></div></div>
+    </div>
+    <div class="build-out" id="buildOut">
+      <p style="color:var(--ink-dim)">Sélectionnez un verbe et une particule pour construire un sens.</p>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section class="view" id="view-quiz">
+    <h2 class="section-title">Quiz visuel</h2>
+    <p class="section-sub">Quelle particule exprime cette idée&nbsp;?</p>
+    <div class="quiz-card" id="quizCard"></div>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section class="view" id="view-flash">
+    <h2 class="section-title">Flashcards premium</h2>
+    <p class="section-sub">Cliquez sur la carte pour la retourner.</p>
+    <div class="fc-stage">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-face fc-front">
+          <div style="font-size:12px;color:var(--ink-faint);letter-spacing:2px">PHRASAL VERB</div>
+          <div class="pv" id="fcPv">PICK UP</div>
+          <div class="fc-hint">👆 Cliquez pour révéler</div>
+        </div>
+        <div class="fc-face fc-back" id="fcBack"></div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="btn btn-ghost" onclick="fcPrev()">←</button>
+      <div class="fc-count" id="fcCount">1 / 1</div>
+      <button class="btn btn-ghost" onclick="fcNext()">→</button>
+    </div>
+    <div style="text-align:center;margin-top:14px"><button class="btn btn-primary" onclick="fcKnow()">✅ Je connais (+10 XP)</button></div>
+  </section>
+
+  <!-- ============ CARTE GÉANTE ============ -->
+  <section class="view" id="view-map">
+    <h2 class="section-title">Carte mentale géante</h2>
+    <p class="section-sub">Cliquez sur une branche pour ouvrir son module.</p>
+    <div class="mapwrap"><div class="mind" id="mind"></div></div>
+  </section>
+
+  <footer>Le Système Visuel des Phrasal Verbs · 100% hors ligne · Conçu pour comprendre, pas mémoriser.</footer>
+</div>
+
+<script>
+/* =========================================================
+   1. DONNÉES — Particules, sens, exemples, métaphores
+   ========================================================= */
+const DATA = {
+  UP:{ color:"#5b8cff", gloss:"vers le haut · plus · complètement",
+    senses:[
+      {emoji:"⬆️",anim:"rise",title:"Mouvement vers le haut",explain:"Un déplacement physique du bas vers le haut.",metaphor:"On s'élève dans l'espace.",tip:"Pensez à une flèche qui monte ⬆️.",
+        ex:[["stand up","se lever"],["get up","se lever (du lit)"],["pick up","ramasser / soulever"]]},
+      {emoji:"📈",anim:"chart",title:"Augmentation",explain:"Une quantité ou une intensité qui croît.",metaphor:"La courbe grimpe.",tip:"Plus = vers le haut.",
+        ex:[["go up","augmenter"],["turn up","monter (le son)"],["speak up","parler plus fort"]]},
+      {emoji:"✅",anim:"drain",title:"Complétion (jusqu'au bout)",explain:"Faire une action totalement, jusqu'à épuisement.",metaphor:"On vide entièrement le verre.",tip:"UP = 100%, jusqu'à la dernière goutte.",
+        ex:[["eat up","tout manger"],["drink up","finir son verre"],["use up","épuiser"]]},
+      {emoji:"💰",anim:"stack",title:"Accumulation",explain:"Mettre ensemble, faire grandir un tas.",metaphor:"On empile, on accumule.",tip:"UP rassemble et fait grossir.",
+        ex:[["save up","économiser"],["pile up","s'accumuler"],["add up","s'additionner"]]},
+      {emoji:"🏳️",anim:"flag",title:"Abandon",explain:"Arrêter de résister, renoncer.",metaphor:"On lève le drapeau blanc.",tip:"give UP = baisser les bras.",
+        ex:[["give up","abandonner"],["wind up","se retrouver / finir par"]]}
+    ]},
+  DOWN:{ color:"#34e1ff", gloss:"vers le bas · moins · arrêt",
+    senses:[
+      {emoji:"⬇️",anim:"fall",title:"Mouvement vers le bas",explain:"Un déplacement vers le sol.",metaphor:"On descend.",tip:"Opposé de UP.",
+        ex:[["sit down","s'asseoir"],["lie down","s'allonger"],["fall down","tomber"]]},
+      {emoji:"📉",anim:"chartdown",title:"Diminution",explain:"Réduire en quantité ou intensité.",metaphor:"La courbe chute.",tip:"Moins = vers le bas.",
+        ex:[["slow down","ralentir"],["turn down","baisser (le son)"],["cut down","réduire"]]},
+      {emoji:"⏻",anim:"shrink",title:"Arrêt / panne",explain:"Réduire jusqu'à l'arrêt complet.",metaphor:"Tout s'éteint.",tip:"shut DOWN = tout couper.",
+        ex:[["shut down","éteindre / fermer"],["break down","tomber en panne"],["calm down","se calmer"]]},
+      {emoji:"📝",anim:"write",title:"Fixer / noter",explain:"Mettre quelque chose par écrit, rendre permanent.",metaphor:"On pose l'info sur le papier.",tip:"write DOWN = ancrer.",
+        ex:[["write down","noter"],["note down","prendre note"]]}
+    ]},
+  OUT:{ color:"#ff5cae", gloss:"sortir · révéler · disparaître",
+    senses:[
+      {emoji:"📤",anim:"slideout",title:"Sortir / quitter",explain:"Aller de l'intérieur vers l'extérieur.",metaphor:"L'objet sort de la boîte.",tip:"OUT = dehors.",
+        ex:[["go out","sortir"],["walk out","partir / quitter"],["take out","sortir / emporter"]]},
+      {emoji:"🔦",anim:"reveal",title:"Visibilité / découverte",explain:"Rendre visible, mettre au jour.",metaphor:"La lumière révèle un secret.",tip:"find OUT = la vérité apparaît.",
+        ex:[["find out","découvrir"],["point out","signaler"],["figure out","comprendre / résoudre"]]},
+      {emoji:"💡",anim:"bulboff",title:"Disparition / épuisement",explain:"S'éteindre, s'user jusqu'à plus rien.",metaphor:"L'ampoule s'éteint.",tip:"run OUT = il n'en reste plus.",
+        ex:[["run out","être à court"],["burn out","s'épuiser"],["wear out","s'user"]]},
+      {emoji:"📣",anim:"spread",title:"Distribution",explain:"Répartir vers plusieurs personnes.",metaphor:"On distribue tout autour.",tip:"hand OUT = donner à chacun.",
+        ex:[["hand out","distribuer"],["give out","distribuer"],["spread out","s'étaler"]]}
+    ]},
+  IN:{ color:"#39e6a8", gloss:"entrer · à l'intérieur · inclusion",
+    senses:[
+      {emoji:"📥",anim:"slidein",title:"Entrer / vers l'intérieur",explain:"Aller de l'extérieur vers l'intérieur.",metaphor:"L'objet entre dans la boîte.",tip:"Opposé de OUT.",
+        ex:[["come in","entrer"],["get in","monter (voiture)"],["move in","emménager"]]},
+      {emoji:"✍️",anim:"fillin",title:"Remplir / compléter",explain:"Ajouter l'information manquante dans un espace.",metaphor:"On remplit les cases vides.",tip:"fill IN = compléter.",
+        ex:[["fill in","remplir (formulaire)"],["write in","ajouter par écrit"]]},
+      {emoji:"🤝",anim:"join",title:"Participation",explain:"Rejoindre, faire partie de.",metaphor:"On entre dans le groupe.",tip:"join IN = participer.",
+        ex:[["join in","participer"],["take in","absorber / comprendre"],["fit in","s'intégrer"]]}
+    ]},
+  ON:{ color:"#ffd166", gloss:"continuer · activer · contact",
+    senses:[
+      {emoji:"▶️",anim:"continue",title:"Continuation",explain:"Poursuivre une action sans s'arrêter.",metaphor:"La route continue.",tip:"go ON = ça continue.",
+        ex:[["go on","continuer"],["carry on","poursuivre"],["move on","passer à autre chose"]]},
+      {emoji:"🔌",anim:"power",title:"Activation",explain:"Mettre en marche, allumer.",metaphor:"On appuie sur ON.",tip:"turn ON = activer.",
+        ex:[["turn on","allumer"],["switch on","mettre en marche"],["put on","mettre (vêtement)"]]},
+      {emoji:"🧲",anim:"stick",title:"Contact / surface",explain:"Être posé ou attaché à une surface.",metaphor:"Ça tient sur la surface.",tip:"hold ON = s'accrocher.",
+        ex:[["hold on","attendre / s'accrocher"],["put on","poser sur"],["try on","essayer (vêtement)"]]}
+    ]},
+  OFF:{ color:"#ff6b6b", gloss:"séparation · désactiver · départ",
+    senses:[
+      {emoji:"✂️",anim:"detach",title:"Séparation / retrait",explain:"Se détacher, enlever d'une surface.",metaphor:"On décolle l'objet.",tip:"Opposé de ON.",
+        ex:[["take off","enlever / décoller"],["cut off","couper / isoler"],["fall off","tomber de"]]},
+      {emoji:"🔌",anim:"poweroff",title:"Désactivation",explain:"Couper, éteindre.",metaphor:"On coupe le courant.",tip:"turn OFF = éteindre.",
+        ex:[["turn off","éteindre"],["switch off","couper"],["call off","annuler"]]},
+      {emoji:"🛫",anim:"depart",title:"Départ / éloignement",explain:"Partir, s'élancer au loin.",metaphor:"On s'envole.",tip:"set OFF = se mettre en route.",
+        ex:[["set off","partir / déclencher"],["take off","décoller"],["run off","s'enfuir"]]}
+    ]},
+  OVER:{ color:"#7c5cff", gloss:"au-dessus · récupérer · refaire · fini",
+    senses:[
+      {emoji:"🌉",anim:"arc",title:"Au-dessus / par-dessus",explain:"Passer au-dessus de quelque chose.",metaphor:"On enjambe un obstacle.",tip:"jump OVER = sauter par-dessus.",
+        ex:[["jump over","sauter par-dessus"],["look over","examiner"],["climb over","escalader"]]},
+      {emoji:"💪",anim:"recover",title:"Récupération",explain:"Surmonter une difficulté ou une émotion.",metaphor:"On passe au-dessus du problème.",tip:"get OVER = se remettre de.",
+        ex:[["get over","se remettre de"],["come over","passer (chez qqn)"]]},
+      {emoji:"🔁",anim:"repeat",title:"Répétition",explain:"Refaire depuis le début.",metaphor:"On recommence le tour.",tip:"do OVER = refaire.",
+        ex:[["do over","recommencer"],["go over","revoir / réviser"],["start over","tout reprendre"]]},
+      {emoji:"🏁",anim:"finish",title:"Fin / terminé",explain:"Une chose qui se conclut.",metaphor:"La ligne d'arrivée.",tip:"be OVER = c'est fini.",
+        ex:[["be over","être terminé"],["take over","prendre le relais"]]}
+    ]},
+  AWAY:{ color:"#34e1ff", gloss:"loin · disparition · continuité",
+    senses:[
+      {emoji:"🏃",anim:"flee",title:"Éloignement",explain:"Partir loin, s'écarter.",metaphor:"On s'éloigne du point de départ.",tip:"go AWAY = partir au loin.",
+        ex:[["go away","partir / s'en aller"],["run away","s'enfuir"],["move away","déménager loin"]]},
+      {emoji:"🫧",anim:"vanish",title:"Disparition progressive",explain:"S'effacer petit à petit.",metaphor:"Ça fond et disparaît.",tip:"fade AWAY = s'estomper.",
+        ex:[["fade away","s'estomper"],["pass away","décéder"],["throw away","jeter"]]},
+      {emoji:"🗄️",anim:"store",title:"Ranger / mettre de côté",explain:"Mettre à l'écart pour plus tard.",metaphor:"On range hors de vue.",tip:"put AWAY = ranger.",
+        ex:[["put away","ranger"],["give away","donner / offrir"]]}
+    ]},
+  BACK:{ color:"#39e6a8", gloss:"retour · en arrière · réciprocité",
+    senses:[
+      {emoji:"↩️",anim:"return",title:"Retour",explain:"Revenir au point de départ.",metaphor:"On fait demi-tour.",tip:"come BACK = revenir.",
+        ex:[["come back","revenir"],["go back","retourner"],["give back","rendre"]]},
+      {emoji:"⏪",anim:"rewind",title:"En arrière",explain:"Reculer, retenir.",metaphor:"On revient en arrière.",tip:"hold BACK = retenir.",
+        ex:[["hold back","retenir"],["step back","reculer"],["look back","regarder en arrière"]]},
+      {emoji:"🔄",anim:"reciproc",title:"Réciprocité",explain:"Répondre, renvoyer en retour.",metaphor:"On renvoie la balle.",tip:"call BACK = rappeler.",
+        ex:[["call back","rappeler"],["pay back","rembourser"],["fight back","riposter"]]}
+    ]},
+  THROUGH:{ color:"#5b8cff", gloss:"traverser · réussir · connexion",
+    senses:[
+      {emoji:"🚇",anim:"tunnel",title:"Traverser",explain:"Passer d'un côté à l'autre.",metaphor:"On traverse le tunnel.",tip:"go THROUGH = passer à travers.",
+        ex:[["go through","traverser / parcourir"],["walk through","traverser à pied"],["pass through","passer par"]]},
+      {emoji:"🧗",anim:"obstacles",title:"Réussir malgré tout",explain:"Surmonter les obstacles jusqu'au bout.",metaphor:"On franchit les épreuves.",tip:"get THROUGH = s'en sortir.",
+        ex:[["get through","s'en sortir / réussir"],["pull through","s'en tirer"],["see through","mener à bien"]]},
+      {emoji:"📞",anim:"connect",title:"Connexion",explain:"Établir un lien (téléphone, contact).",metaphor:"On établit la connexion.",tip:"put THROUGH = mettre en relation.",
+        ex:[["put through","mettre en relation (tél.)"],["get through to","joindre qqn"]]}
+    ]},
+  AROUND:{ color:"#ff5cae", gloss:"autour · sans but · présence",
+    senses:[
+      {emoji:"🔄",anim:"circle",title:"Autour / en cercle",explain:"Tourner ou entourer.",metaphor:"On fait le tour.",tip:"turn AROUND = se retourner.",
+        ex:[["turn around","se retourner"],["look around","regarder autour"],["gather around","se rassembler"]]},
+      {emoji:"🌀",anim:"wander",title:"Sans but précis",explain:"Faire des choses sans direction claire.",metaphor:"On erre sans plan.",tip:"mess AROUND = traîner.",
+        ex:[["hang around","traîner"],["mess around","perdre du temps"],["fool around","faire l'idiot"]]}
+    ]},
+  ABOUT:{ color:"#ffd166", gloss:"autour · à peu près · sur le point de",
+    senses:[
+      {emoji:"🚶",anim:"wander",title:"Çà et là",explain:"Se déplacer sans direction (proche de around).",metaphor:"On se balade un peu partout.",tip:"move ABOUT = aller et venir.",
+        ex:[["move about","aller et venir"],["walk about","se promener"],["lie about","traîner partout"]]},
+      {emoji:"⏳",anim:"aboutto",title:"Sur le point de",explain:"Juste avant que ça arrive.",metaphor:"C'est imminent.",tip:"be ABOUT to = être sur le point de.",
+        ex:[["be about to","être sur le point de"],["bring about","provoquer"]]}
+    ]},
+  UNDER:{ color:"#7c5cff", gloss:"en dessous · moins · soumission",
+    senses:[
+      {emoji:"⬇️",anim:"below",title:"En dessous",explain:"Position inférieure, sous quelque chose.",metaphor:"On passe en dessous.",tip:"go UNDER = couler / sombrer.",
+        ex:[["go under","couler / faire faillite"],["knuckle under","se soumettre"]]},
+      {emoji:"📉",anim:"less",title:"Insuffisance",explain:"Moins que nécessaire.",metaphor:"En dessous du seuil.",tip:"under- = pas assez.",
+        ex:[["undergo","subir"],["undervalue","sous-estimer"],["underestimate","sous-évaluer"]]}
+    ]},
+  TOGETHER:{ color:"#39e6a8", gloss:"ensemble · union · assemblage",
+    senses:[
+      {emoji:"🧩",anim:"assemble",title:"Assembler / réunir",explain:"Mettre des éléments ensemble.",metaphor:"Les pièces se rejoignent.",tip:"put TOGETHER = assembler.",
+        ex:[["put together","assembler"],["get together","se réunir"],["bring together","rassembler"]]},
+      {emoji:"🤝",anim:"unite",title:"Collaboration",explain:"Agir de concert.",metaphor:"On unit nos forces.",tip:"work TOGETHER = collaborer.",
+        ex:[["work together","collaborer"],["pull together","s'unir"],["come together","se réunir"]]}
+    ]},
+  ALONG:{ color:"#34e1ff", gloss:"le long de · progression · accompagnement",
+    senses:[
+      {emoji:"➡️",anim:"path",title:"Avancer / progresser",explain:"Le long d'un chemin, vers l'avant.",metaphor:"On suit la route.",tip:"move ALONG = avancer.",
+        ex:[["move along","avancer / circuler"],["come along","venir / progresser"],["go along","accompagner"]]},
+      {emoji:"🤗",anim:"accompany",title:"S'entendre / accompagner",explain:"Aller de pair, en bonne entente.",metaphor:"On chemine ensemble.",tip:"get ALONG = bien s'entendre.",
+        ex:[["get along","bien s'entendre"],["bring along","emmener avec soi"],["sing along","chanter en chœur"]]}
+    ]}
+};
+const ORDER = Object.keys(DATA);
+
+/* =========================================================
+   2. ÉTAT & PERSISTANCE
+   ========================================================= */
+const STATE = { xp:0, level:1, studied:{}, knownCards:{}, badges:{} };
+function save(){ try{ localStorage.setItem('pv_state', JSON.stringify(STATE)); }catch(e){} }
+function load(){ try{ const s=JSON.parse(localStorage.getItem('pv_state')); if(s) Object.assign(STATE,s);}catch(e){} }
+load();
+
+/* =========================================================
+   AUDIO GÉNÉRATIF (Web Audio API) — 100% synthétique, hors ligne
+   ========================================================= */
+const AUDIO={on:true,ctx:null,master:null};
+function loadSnd(){ try{ const v=localStorage.getItem('pv_sound'); if(v!==null) AUDIO.on=(v==='1'); }catch(e){} }
+function saveSnd(){ try{ localStorage.setItem('pv_sound',AUDIO.on?'1':'0'); }catch(e){} }
+loadSnd();
+function ensureAudio(){
+  if(AUDIO.ctx) return;
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    AUDIO.ctx=new AC();
+    AUDIO.master=AUDIO.ctx.createGain();
+    AUDIO.master.gain.value=0.16; // volume global discret
+    AUDIO.master.connect(AUDIO.ctx.destination);
+  }catch(e){}
+}
+function unlockAudio(){ ensureAudio(); if(AUDIO.ctx&&AUDIO.ctx.state==='suspended'){ AUDIO.ctx.resume(); } }
+/* brique élémentaire : un oscillateur enveloppé */
+function tone(o){
+  if(!AUDIO.on) return; ensureAudio(); const ctx=AUDIO.ctx; if(!ctx) return;
+  const t0=ctx.currentTime, dur=o.dur||0.18, delay=o.delay||0;
+  const osc=ctx.createOscillator(); osc.type=o.type||'sine';
+  const g=ctx.createGain();
+  const f0=o.f0||440, f1=(o.f1!=null?o.f1:f0);
+  osc.frequency.setValueAtTime(f0,t0+delay);
+  if(f1!==f0) osc.frequency.exponentialRampToValueAtTime(Math.max(30,f1),t0+delay+dur);
+  const vol=Math.max(0.0001,o.vol!=null?o.vol:0.4);
+  g.gain.setValueAtTime(0.0001,t0+delay);
+  g.gain.exponentialRampToValueAtTime(vol,t0+delay+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+delay+dur);
+  osc.connect(g); g.connect(AUDIO.master);
+  osc.start(t0+delay); osc.stop(t0+delay+dur+0.03);
+}
+/* bruit filtré : pour les effets d'expansion / aspiration / souffle */
+function noise(o){
+  if(!AUDIO.on) return; ensureAudio(); const ctx=AUDIO.ctx; if(!ctx) return;
+  const t0=ctx.currentTime, dur=o.dur||0.25;
+  const len=Math.floor(ctx.sampleRate*dur);
+  const buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=Math.random()*2-1;
+  const src=ctx.createBufferSource(); src.buffer=buf;
+  const bp=ctx.createBiquadFilter(); bp.type=o.filter||'bandpass';
+  bp.frequency.setValueAtTime(o.f0||800,t0);
+  if(o.f1) bp.frequency.exponentialRampToValueAtTime(Math.max(40,o.f1),t0+dur);
+  bp.Q.value=o.q||1.2;
+  const g=ctx.createGain();
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(o.vol||0.22,t0+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  src.connect(bp); bp.connect(g); g.connect(AUDIO.master);
+  src.start(t0); src.stop(t0+dur);
+}
+/* sons d'interface */
+function sfx(kind){
+  if(!AUDIO.on) return;
+  switch(kind){
+    case 'tap':     tone({type:'triangle',f0:520,f1:660,dur:0.05,vol:0.16}); break;
+    case 'nav':     tone({type:'sine',f0:440,f1:620,dur:0.11,vol:0.3}); break;
+    case 'open':    tone({type:'sine',f0:300,f1:780,dur:0.22,vol:0.32}); tone({type:'sine',f0:600,f1:920,dur:0.18,vol:0.14,delay:0.02}); break;
+    case 'reveal':  tone({type:'triangle',f0:440,f1:880,dur:0.16,vol:0.3}); tone({type:'sine',f0:880,f1:1175,dur:0.18,vol:0.2,delay:0.08}); break;
+    case 'xp':      tone({type:'sine',f0:760,f1:1015,dur:0.1,vol:0.26}); break;
+    case 'badge':   [523,659,784,1046].forEach((f,i)=>tone({type:'triangle',f0:f,dur:0.17,vol:0.26,delay:i*0.09})); break;
+    case 'flip':    noise({filter:'highpass',f0:1400,f1:3200,dur:0.11,vol:0.14}); tone({type:'sine',f0:380,f1:520,dur:0.1,vol:0.14}); break;
+    case 'correct': [660,880].forEach((f,i)=>tone({type:'sine',f0:f,dur:0.14,vol:0.28,delay:i*0.09})); break;
+    case 'wrong':   tone({type:'sawtooth',f0:300,f1:150,dur:0.22,vol:0.22}); break;
+  }
+}
+/* identité sonore propre à chaque particule (cohérente avec sa métaphore) */
+function particleSound(p){
+  if(!AUDIO.on) return;
+  switch(p){
+    case 'UP':       tone({type:'sine',f0:330,f1:880,dur:0.3,vol:0.32}); break;            // ascendant
+    case 'DOWN':     tone({type:'sine',f0:740,f1:220,dur:0.3,vol:0.32}); break;            // descendant
+    case 'OUT':      noise({filter:'bandpass',f0:300,f1:2400,dur:0.32,vol:0.28,q:0.7}); break; // expansion
+    case 'IN':       noise({filter:'bandpass',f0:2400,f1:300,dur:0.32,vol:0.28,q:0.7}); break; // aspiration
+    case 'ON':       tone({type:'square',f0:440,f1:660,dur:0.1,vol:0.2}); tone({type:'sine',f0:900,dur:0.1,vol:0.16,delay:0.06}); break; // activation
+    case 'OFF':      tone({type:'square',f0:560,f1:110,dur:0.22,vol:0.22}); break;          // désactivation
+    case 'OVER':     tone({type:'sine',f0:400,f1:820,dur:0.16,vol:0.28}); tone({type:'sine',f0:820,f1:400,dur:0.16,vol:0.24,delay:0.15}); break; // passage en arc
+    case 'AWAY':     tone({type:'sine',f0:680,f1:240,dur:0.5,vol:0.3}); break;              // éloignement (longue traîne)
+    case 'BACK':     tone({type:'triangle',f0:300,f1:560,dur:0.14,vol:0.26}); tone({type:'triangle',f0:560,f1:360,dur:0.16,vol:0.22,delay:0.12}); break; // aller-retour
+    case 'THROUGH':  noise({filter:'lowpass',f0:500,f1:2000,dur:0.34,vol:0.24}); break;     // traversée
+    case 'AROUND':   tone({type:'sine',f0:440,f1:560,dur:0.13,vol:0.24}); tone({type:'sine',f0:560,f1:440,dur:0.16,vol:0.22,delay:0.12}); break; // boucle
+    case 'ABOUT':    tone({type:'triangle',f0:500,f1:600,dur:0.12,vol:0.2}); tone({type:'triangle',f0:600,f1:500,dur:0.14,vol:0.18,delay:0.1}); break;
+    case 'UNDER':    tone({type:'sine',f0:300,f1:140,dur:0.34,vol:0.3}); break;             // sous le seuil
+    case 'TOGETHER': tone({type:'sine',f0:392,dur:0.26,vol:0.22}); tone({type:'sine',f0:523,dur:0.26,vol:0.22,delay:0.02}); break; // accord (union)
+    case 'ALONG':    tone({type:'sine',f0:440,f1:620,dur:0.34,vol:0.26}); break;            // glissé en avant
+    default:         tone({type:'sine',f0:520,dur:0.16,vol:0.22});
+  }
+}
+function toggleSound(e){
+  if(e&&e.stopPropagation) e.stopPropagation();
+  AUDIO.on=!AUDIO.on; saveSnd();
+  const b=document.getElementById('sndBtn');
+  if(b){ b.textContent=AUDIO.on?'🔊':'🔇'; b.classList.toggle('off',!AUDIO.on); }
+  if(AUDIO.on){ unlockAudio(); sfx('nav'); }
+  haptic(12);
+}
+/* =========================================================
+   RETOUR HAPTIQUE (vibration mobile si supportée)
+   ========================================================= */
+function haptic(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms); }catch(e){} }
+
+/* =========================================================
+   EFFET RIPPLE TACTILE + déverrouillage audio au 1er geste
+   ========================================================= */
+function attachRipple(){
+  const SEL='.btn,.sense-btn,.qopt,.chip,.feat,.pcard,.backbtn,.mnode,.botnav button,.topnav button,.sndbtn,.exrow';
+  let lastTap=0;
+  document.addEventListener('pointerdown',e=>{
+    unlockAudio();
+    const host=e.target.closest(SEL); if(!host) return;
+    const r=host.getBoundingClientRect();
+    const size=Math.max(r.width,r.height);
+    const sp=document.createElement('span'); sp.className='ripple';
+    sp.style.width=sp.style.height=size+'px';
+    sp.style.left=(e.clientX-r.left-size/2)+'px';
+    sp.style.top=(e.clientY-r.top-size/2)+'px';
+    const cs=getComputedStyle(host);
+    if(cs.position==='static') host.style.position='relative';
+    if(cs.overflow!=='hidden') host.style.overflow='hidden';
+    host.appendChild(sp);
+    setTimeout(()=>sp.remove(),600);
+    const now=Date.now();
+    if(now-lastTap>40){ sfx('tap'); haptic(5); lastTap=now; } // feedback tactile léger anti-spam
+  },{passive:true});
+}
+/* =========================================================
+   DÉTECTION DE PERFORMANCE (mode économie sur appareils modestes)
+   ========================================================= */
+function detectPerf(){
+  try{
+    const mob=matchMedia('(max-width:768px)').matches;
+    const lowCores=(navigator.hardwareConcurrency||8)<=4;
+    const lowMem=(navigator.deviceMemory||8)<=4;
+    const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(reduce || (mob && (lowCores||lowMem))) document.body.classList.add('lowpower');
+  }catch(e){}
+}
+
+function addXP(n){
+  STATE.xp+=n;
+  const newLvl=Math.floor(STATE.xp/100)+1;
+  if(newLvl>STATE.level){ STATE.level=newLvl; toast("🎉","Niveau "+newLvl+" atteint !","Continuez comme ça"); sfx('badge'); haptic([12,40,12]); }
+  else if(n>=5){ sfx('xp'); }
+  STATE.level=newLvl;
+  save(); refreshHUD();
+}
+function markStudied(p){ if(!STATE.studied[p]){ STATE.studied[p]=true; checkBadges(p);} save(); refreshHUD(); }
+function checkBadges(p){
+  const key="Master of "+p;
+  if(!STATE.badges[key]){ STATE.badges[key]=true; toast("🏅","Badge débloqué","Master of "+p); sfx('badge'); haptic([10,30,10,30,10]); }
+}
+function refreshHUD(){
+  document.getElementById('xpval').textContent=STATE.xp;
+  document.getElementById('lvlval').textContent=STATE.level;
+  const done=Object.keys(STATE.studied).length;
+  const pct=Math.round(done/ORDER.length*100);
+  const pb=document.getElementById('progbar'); if(pb) pb.style.width=pct+"%";
+  const pt=document.getElementById('progtxt'); if(pt) pt.textContent=done+" / "+ORDER.length+" particules";
+  const sx=document.getElementById('st-xp'); if(sx) sx.textContent=STATE.xp;
+  const sb=document.getElementById('st-badges'); if(sb) sb.textContent=Object.keys(STATE.badges).length;
+  let senseCount=0; for(const k in STATE.studied) senseCount+=DATA[k].senses.length;
+  const ss=document.getElementById('st-senses'); if(ss) ss.textContent=senseCount;
+  // badge rail
+  const rail=document.getElementById('badgeRail');
+  if(rail){ rail.innerHTML=ORDER.map(p=>{
+    const on=STATE.badges["Master of "+p]?"on":"";
+    return `<div class="bdg ${on}">${on?'🏅':'🔒'} ${p}</div>`; }).join(''); }
+  // grid chips
+  document.querySelectorAll('.pcard').forEach(c=>{
+    const p=c.dataset.p; const chip=c.querySelector('.pchip');
+    if(STATE.studied[p]){ chip.className='pchip'; chip.textContent='✓ vu'; }
+    else { chip.className='pchip todo'; chip.textContent='nouveau'; }
+  });
+}
+
+/* =========================================================
+   3. NAVIGATION
+   ========================================================= */
+let _curView='home';
+function go(view, arg){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('show'));
+  const map={home:'view-home',discover:'view-discover',builder:'view-builder',quiz:'view-quiz',flash:'view-flash',map:'view-map',particle:'view-particle'};
+  const el=document.getElementById(map[view]);
+  el.classList.add('show');
+  // ré-amorce l'animation d'entrée à chaque changement de vue
+  el.style.animation='none'; void el.offsetWidth; el.style.animation='';
+  document.querySelectorAll('.topnav button,.botnav button').forEach(b=>b.classList.toggle('active', b.dataset.nav===view));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(view!==_curView){ sfx(view==='particle'?'open':'nav'); haptic(8); }
+  _curView=view;
+  if(view==='particle') openParticle(arg);
+  if(view==='quiz') startQuiz();
+  if(view==='discover') discRender();
+  if(view==='flash') renderCard();
+}
+
+/* =========================================================
+   4. ANIMATIONS SVG  (rendu selon le type)
+   ========================================================= */
+function svgFor(type,color){
+  const c=color||'#5b8cff';
+  const S=(inner,extra="")=>`<svg viewBox="0 0 200 170" ${extra}>${inner}</svg>`;
+  const g=`<defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs>`;
+  switch(type){
+    case "rise": return S(`${g}<g style="animation:riseUp 2.4s ease-in-out infinite"><circle cx="100" cy="55" r="16" fill="${c}"/><rect x="92" y="70" width="16" height="40" rx="8" fill="url(#g1)"/></g><path d="M100 150 l0 -18 m-9 9 l9 -9 l9 9" stroke="${c}" stroke-width="4" fill="none" stroke-linecap="round" style="animation:wave 1.4s infinite"/>`);
+    case "fall": return S(`${g}<g style="animation:riseUp 2.4s ease-in-out infinite reverse"><circle cx="100" cy="55" r="16" fill="${c}"/><rect x="92" y="70" width="16" height="40" rx="8" fill="url(#g1)"/></g><path d="M100 20 l0 18 m-9 -9 l9 9 l9 -9" stroke="${c}" stroke-width="4" fill="none" stroke-linecap="round" style="animation:wave 1.4s infinite"/>`);
+    case "chart": return S(`${g}${[40,72,104,136].map((x,i)=>`<rect x="${x}" y="${140-(i+1)*26}" width="22" height="${(i+1)*26}" rx="5" fill="url(#g1)" style="transform-origin:bottom;animation:growBar 1.2s ${i*.18}s ease-out both"/>`).join('')}<path d="M40 120 L170 40" stroke="${c}" stroke-width="3" stroke-dasharray="6 6" fill="none" style="animation:dashmove 3s linear infinite"/>`);
+    case "chartdown": return S(`${g}${[40,72,104,136].map((x,i)=>`<rect x="${x}" y="${140-(4-i)*26}" width="22" height="${(4-i)*26}" rx="5" fill="url(#g1)" style="transform-origin:bottom;animation:growBar 1.2s ${i*.18}s ease-out both"/>`).join('')}`);
+    case "drain": return S(`<rect x="74" y="34" width="52" height="100" rx="10" fill="none" stroke="${c}" stroke-width="4"/><rect x="80" y="44" width="40" height="84" rx="6" fill="url(#g1)" style="transform-origin:bottom;animation:drain 2.6s ease-in-out infinite;transform:translateY(0)"/>${g}`);
+    case "stack": return S(`${g}${[0,1,2,3].map(i=>`<circle cx="100" cy="${130-i*22}" r="20" fill="url(#g1)" stroke="#ffd166" stroke-width="2" style="animation:stack .6s ${i*.25}s both"/><text x="100" y="${135-i*22}" text-anchor="middle" font-size="13" fill="#1a1330" font-weight="bold">$</text>`).join('')}`);
+    case "flag": return S(`<rect x="60" y="30" width="4" height="110" fill="${c}"/><path d="M64 34 q30 10 56 0 l0 40 q-26 10 -56 0 z" fill="#fff" style="transform-origin:64px 50px;animation:flagWave 1.6s ease-in-out infinite"/>`);
+    case "slideout": return S(`${g}<rect x="30" y="70" width="60" height="60" rx="8" fill="none" stroke="${c}" stroke-width="4"/><rect x="110" y="80" width="40" height="40" rx="8" fill="url(#g1)" style="animation:slideOut 2s ease-in-out infinite alternate"/><path d="M150 100 l16 0 m-7 -7 l7 7 l-7 7" stroke="#ffd166" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+    case "slidein": return S(`${g}<rect x="110" y="70" width="60" height="60" rx="8" fill="none" stroke="${c}" stroke-width="4"/><rect x="50" y="80" width="40" height="40" rx="8" fill="url(#g1)" style="animation:slideOut 2s ease-in-out infinite alternate-reverse"/>`);
+    case "reveal": return S(`${g}<circle cx="100" cy="95" r="30" fill="url(#g1)" style="animation:glowPulse 2s ease-in-out infinite"/><path d="M100 35 l0 16 M100 139 l0 16 M40 95 l16 0 M144 95 l16 0 M60 55 l11 11 M129 124 l11 11 M140 55 l-11 11 M71 124 l-11 11" stroke="#ffd166" stroke-width="3" stroke-linecap="round"/>`);
+    case "bulboff": return S(`<g style="animation:shrink 2.4s ease-in-out infinite"><circle cx="100" cy="80" r="28" fill="url(#g1)"/><rect x="90" y="106" width="20" height="16" rx="3" fill="${c}"/></g>${g}<text x="100" y="150" text-anchor="middle" fill="${c}" font-size="13">…off</text>`);
+    case "spread": return S(`${g}<circle cx="100" cy="90" r="14" fill="url(#g1)"/>${[0,60,120,180,240,300].map(a=>`<circle cx="${100+Math.cos(a*Math.PI/180)*50}" cy="${90+Math.sin(a*Math.PI/180)*40}" r="8" fill="${c}" style="animation:wave 1.6s ${a/360}s infinite"/>`).join('')}`);
+    case "fillin": return S(`${g}<rect x="50" y="50" width="100" height="70" rx="8" fill="none" stroke="${c}" stroke-width="3"/>${[60,80,100].map((y,i)=>`<rect x="62" y="${y}" width="76" height="8" rx="4" fill="url(#g1)" style="transform-origin:left;animation:growBar 1s ${i*.4}s both"/>`).join('')}`);
+    case "join": return S(`${g}<circle cx="70" cy="90" r="18" fill="${c}"/><circle cx="130" cy="90" r="18" fill="url(#g1)" style="animation:slideOut 1.8s infinite alternate"/><path d="M88 90 l24 0" stroke="#ffd166" stroke-width="4" stroke-linecap="round"/>`);
+    case "continue": return S(`${g}<path d="M20 100 L180 100" stroke="${c}" stroke-width="5" stroke-dasharray="14 10" style="animation:dashmove 1.4s linear infinite"/><circle cx="40" cy="100" r="12" fill="url(#g1)" style="animation:slideOut 2s linear infinite"/>`);
+    case "power": return S(`${g}<circle cx="100" cy="90" r="34" fill="none" stroke="${c}" stroke-width="5" style="animation:glowPulse 2s infinite"/><line x1="100" y1="60" x2="100" y2="92" stroke="#ffd166" stroke-width="5" stroke-linecap="round"/>`);
+    case "stick": return S(`${g}<rect x="60" y="110" width="80" height="14" rx="6" fill="${c}"/><circle cx="100" cy="92" r="18" fill="url(#g1)" style="animation:floatY 1.8s ease-in-out infinite"/>`);
+    case "detach": return S(`${g}<rect x="60" y="100" width="80" height="14" rx="6" fill="${c}"/><circle cx="120" cy="70" r="16" fill="url(#g1)" style="animation:slideOut 1.8s infinite alternate"/><path d="M70 60 q10 -8 20 0" stroke="#ffd166" stroke-width="3" fill="none"/>`);
+    case "poweroff": return S(`<circle cx="100" cy="90" r="34" fill="none" stroke="#ff6b6b" stroke-width="5" style="animation:shrink 2.2s infinite"/><line x1="100" y1="60" x2="100" y2="92" stroke="#ff6b6b" stroke-width="5" stroke-linecap="round"/>${g}`);
+    case "depart": return S(`${g}<path d="M40 130 l60 -20 l40 -30 l20 6 l-30 34 z" fill="url(#g1)" style="animation:slideOut 2s ease-in infinite"/><path d="M30 140 l140 -30" stroke="${c}" stroke-width="2" stroke-dasharray="5 5" style="animation:dashmove 2s linear infinite"/>`);
+    case "arc": return S(`${g}<path d="M30 130 Q100 20 170 130" fill="none" stroke="${c}" stroke-width="4" stroke-dasharray="6 6" style="animation:dashmove 2s linear infinite"/><circle r="11" fill="url(#g1)"><animateMotion dur="2.4s" repeatCount="indefinite" path="M30 130 Q100 20 170 130"/></circle>`);
+    case "recover": return S(`${g}<path d="M30 120 Q100 30 170 120" fill="none" stroke="${c}" stroke-width="4"/><circle r="12" fill="#39e6a8"><animateMotion dur="2.6s" repeatCount="indefinite" path="M30 120 Q100 30 170 120"/></circle><rect x="86" y="116" width="28" height="20" rx="3" fill="#ff6b6b" opacity=".7"/>`);
+    case "repeat": return S(`${g}<path d="M100 40 a45 45 0 1 1 -32 13" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" style="transform-origin:100px 95px;animation:spinSlow 2.4s linear infinite"/><path d="M68 53 l-6 -14 l16 2 z" fill="#ffd166"/>`);
+    case "finish": return S(`${g}<rect x="70" y="40" width="8" height="100" fill="${c}"/>${[0,1,2,3,4].map(r=>[0,1].map(col=>`<rect x="${78+col*16}" y="${40+r*16}" width="16" height="16" fill="${(r+col)%2?'#fff':'#1a1330'}"/>`).join('')).join('')}<circle r="9" fill="#39e6a8"><animateMotion dur="2s" repeatCount="indefinite" path="M30 120 L74 120"/></circle>`);
+    case "flee": return S(`${g}<circle cx="60" cy="70" r="13" fill="${c}"/><rect x="53" y="84" width="14" height="30" rx="6" fill="url(#g1)" style="animation:slideOut 2s ease-out infinite"/><path d="M120 120 l40 0 m-10 -8 l10 8 l-10 8" stroke="#ffd166" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+    case "vanish": return S(`${g}<circle cx="100" cy="90" r="28" fill="url(#g1)" style="animation:shrink 2.4s ease-in-out infinite"/>${[0,1,2].map(i=>`<circle cx="${120+i*14}" cy="${80-i*10}" r="${6-i}" fill="${c}" style="animation:wave 1.6s ${i*.3}s infinite"/>`).join('')}`);
+    case "store": return S(`${g}<rect x="55" y="80" width="90" height="55" rx="6" fill="none" stroke="${c}" stroke-width="4"/><rect x="70" y="55" width="30" height="30" rx="5" fill="url(#g1)" style="animation:riseUp 2s infinite reverse"/>`);
+    case "return": return S(`${g}<path d="M150 70 a45 45 0 1 0 -10 60" fill="none" stroke="${c}" stroke-width="5"/><path d="M138 124 l8 12 l-16 2 z" fill="#39e6a8"/><circle r="10" fill="url(#g1)"><animateMotion dur="2.4s" repeatCount="indefinite" path="M150 70 a45 45 0 1 0 -10 60"/></circle>`);
+    case "rewind": return S(`${g}<path d="M120 60 L70 95 L120 130 Z" fill="url(#g1)" style="animation:slideOut 1.6s infinite alternate-reverse"/><line x1="60" y1="55" x2="60" y2="135" stroke="${c}" stroke-width="6"/>`);
+    case "reciproc": return S(`${g}<circle cx="60" cy="90" r="16" fill="${c}"/><circle cx="140" cy="90" r="16" fill="url(#g1)"/><path d="M78 80 q22 -20 44 0" stroke="#ffd166" stroke-width="3" fill="none" marker-end=""/><path d="M122 100 q-22 20 -44 0" stroke="#39e6a8" stroke-width="3" fill="none"/>`);
+    case "tunnel": return S(`${g}<path d="M50 130 q0 -60 50 -60 q50 0 50 60" fill="none" stroke="${c}" stroke-width="5"/><rect x="48" y="128" width="104" height="8" fill="${c}"/><circle r="11" fill="#39e6a8"><animateMotion dur="2.6s" repeatCount="indefinite" path="M30 120 L170 120"/></circle>`);
+    case "obstacles": return S(`${g}${[60,100,140].map(x=>`<rect x="${x-6}" y="90" width="12" height="44" fill="${c}" opacity=".7"/>`).join('')}<circle r="12" fill="url(#g1)"><animateMotion dur="3s" repeatCount="indefinite" path="M30 120 Q60 70 80 120 Q100 70 120 120 Q140 70 170 120"/></circle>`);
+    case "connect": return S(`${g}<circle cx="50" cy="90" r="16" fill="${c}"/><circle cx="150" cy="90" r="16" fill="url(#g1)"/><path d="M66 90 L134 90" stroke="#39e6a8" stroke-width="3" stroke-dasharray="8 6" style="animation:dashmove 1.2s linear infinite"/><circle cx="100" cy="90" r="6" fill="#ffd166" style="animation:glowPulse 1.4s infinite"/>`);
+    case "circle": return S(`${g}<circle cx="100" cy="90" r="46" fill="none" stroke="${c}" stroke-width="4" stroke-dasharray="10 8" style="transform-origin:100px 90px;animation:spinSlow 4s linear infinite"/><circle cx="100" cy="90" r="14" fill="url(#g1)"/><circle r="8" fill="#ffd166" style="transform-origin:100px 90px;animation:spinSlow 3s linear infinite"><animateMotion dur="3s" repeatCount="indefinite" path="M100 44 a46 46 0 1 1 -1 0"/></circle>`);
+    case "wander": return S(`${g}<path d="M40 120 Q70 60 100 110 T160 90" fill="none" stroke="${c}" stroke-width="3" stroke-dasharray="6 6"/><circle r="11" fill="url(#g1)"><animateMotion dur="3.4s" repeatCount="indefinite" path="M40 120 Q70 60 100 110 T160 90"/></circle>`);
+    case "aboutto": return S(`${g}<circle cx="100" cy="90" r="40" fill="none" stroke="${c}" stroke-width="4"/><line x1="100" y1="90" x2="100" y2="60" stroke="#ffd166" stroke-width="4" stroke-linecap="round" style="transform-origin:100px 90px;animation:spinSlow 1.6s linear infinite"/><line x1="100" y1="90" x2="124" y2="90" stroke="${c}" stroke-width="3" stroke-linecap="round"/>`);
+    case "below": return S(`${g}<rect x="40" y="80" width="120" height="8" rx="4" fill="${c}"/><circle cx="100" cy="115" r="16" fill="url(#g1)" style="animation:riseUp 2.2s infinite reverse"/>`);
+    case "less": return S(`${g}<rect x="74" y="40" width="52" height="100" rx="8" fill="none" stroke="${c}" stroke-width="3"/><rect x="80" y="110" width="40" height="24" rx="4" fill="url(#g1)"/><line x1="60" y1="80" x2="140" y2="80" stroke="#ff6b6b" stroke-width="2" stroke-dasharray="5 5"/>`);
+    case "assemble": return S(`${g}<rect x="55" y="70" width="40" height="40" rx="6" fill="url(#g1)" style="animation:slideOut 1.8s infinite alternate"/><rect x="105" y="70" width="40" height="40" rx="6" fill="${c}" style="animation:slideOut 1.8s infinite alternate-reverse"/><path d="M95 90 l10 0" stroke="#ffd166" stroke-width="4"/>`);
+    case "unite": return S(`${g}<circle cx="75" cy="90" r="16" fill="${c}"/><circle cx="125" cy="90" r="16" fill="url(#g1)"/><path d="M88 84 q12 -14 24 0" stroke="#39e6a8" stroke-width="4" fill="none"/>`);
+    case "path": return S(`${g}<path d="M20 120 L180 80" stroke="${c}" stroke-width="5" stroke-dasharray="12 10" style="animation:dashmove 1.4s linear infinite"/><circle r="11" fill="url(#g1)"><animateMotion dur="2.4s" repeatCount="indefinite" path="M20 120 L180 80"/></circle>`);
+    case "accompany": return S(`${g}<circle cx="80" cy="80" r="13" fill="${c}"/><circle cx="120" cy="80" r="13" fill="url(#g1)"/><rect x="73" y="94" width="14" height="26" rx="6" fill="${c}"/><rect x="113" y="94" width="14" height="26" rx="6" fill="url(#g1)"/><path d="M150 110 l16 0 m-7 -7 l7 7 l-7 7" stroke="#ffd166" stroke-width="3" fill="none" stroke-linecap="round"/>`);
+    case "write": return S(`${g}<rect x="50" y="60" width="100" height="60" rx="6" fill="none" stroke="${c}" stroke-width="3"/><path d="M62 110 L120 52 L134 66 L76 124 Z" fill="url(#g1)"/>`);
+    default: return S(`${g}<circle cx="100" cy="85" r="30" fill="url(#g1)" style="animation:floatY 2s ease-in-out infinite"/>`);
+  }
+}
+
+/* =========================================================
+   5. GRILLE D'ACCUEIL
+   ========================================================= */
+function buildGrid(){
+  const grid=document.getElementById('pgrid');
+  grid.innerHTML=ORDER.map(p=>{
+    const d=DATA[p];
+    return `<div class="pcard" data-p="${p}" onclick="go('particle','${p}')">
+      <div class="pchip todo">nouveau</div>
+      <div class="auraB" style="background:${d.color}"></div>
+      <div class="pname" style="color:${d.color}">${p}</div>
+      <div class="pgloss">${d.gloss}</div>
+    </div>`;
+  }).join('');
+}
+
+/* =========================================================
+   6. MODULE PARTICULE
+   ========================================================= */
+let curParticle=null, curSense=0;
+function openParticle(p){
+  curParticle=p; curSense=0;
+  const d=DATA[p];
+  document.getElementById('modTitle').textContent=p;
+  document.getElementById('modTitle').style.background=`linear-gradient(120deg,#fff,${d.color})`;
+  document.getElementById('modTitle').style.webkitBackgroundClip='text';
+  document.getElementById('modGloss').textContent=d.gloss;
+  const core=document.getElementById('modCore'); core.textContent=p;
+  core.style.background=`radial-gradient(circle at 30% 25%,${d.color},rgba(40,30,90,.6))`;
+  document.getElementById('senseList').innerHTML=d.senses.map((s,i)=>
+    `<button class="sense-btn ${i===0?'active':''}" data-i="${i}" onclick="selSense(${i})">
+      <span class="em">${s.emoji}</span>
+      <span><span class="tt">${s.title}</span><span class="ex" style="display:block">${s.ex[0][0]}…</span></span>
+    </button>`).join('');
+  renderSense();
+  markStudied(p);
+  setTimeout(()=>particleSound(p),120); // identité sonore de la particule
+}
+function selSense(i){ curSense=i;
+  document.querySelectorAll('#senseList .sense-btn').forEach(b=>b.classList.toggle('active',+b.dataset.i===i));
+  renderSense(); addXP(2); particleSound(curParticle); haptic(6);
+}
+function renderSense(){
+  const d=DATA[curParticle], s=d.senses[curSense];
+  document.getElementById('senseDetail').innerHTML=`
+    <div class="sd-top">
+      <div class="svgstage">${svgFor(s.anim,d.color)}</div>
+      <div class="sd-meta">
+        <h2>${s.emoji} ${s.title}</h2>
+        <p class="explain">${s.explain}</p>
+        <div class="metaphor">🎨 ${s.metaphor}</div>
+      </div>
+    </div>
+    <div class="examples">
+      ${s.ex.map(e=>`<div class="exrow"><b>${e[0]}</b><span>${e[1]}</span></div>`).join('')}
+    </div>
+    <div class="tipbox"><b>💡 Astuce mémoire :</b> ${s.tip}</div>
+    <div class="nav-senses">
+      <button class="backbtn" onclick="stepSense(-1)">← Sens précédent</button>
+      <button class="backbtn" onclick="stepSense(1)">Sens suivant →</button>
+    </div>`;
+}
+function stepSense(dir){
+  const n=DATA[curParticle].senses.length;
+  curSense=(curSense+dir+n)%n; selSense(curSense);
+}
+
+/* =========================================================
+   7. MODE DÉCOUVERTE
+   ========================================================= */
+const DISCOVERY=[
+  {pv:"GET UP",v:["GET","obtenir"],p:["UP","vers le haut"],img:"obtenir une position vers le haut",res:["GET UP","se lever"]},
+  {pv:"GET OVER",v:["GET","obtenir"],p:["OVER","passer au-dessus"],img:"passer au-dessus d'un problème",res:["GET OVER","se remettre de"]},
+  {pv:"RUN OUT",v:["RUN","courir/aller"],p:["OUT","jusqu'à épuisement"],img:"aller jusqu'à ce qu'il n'y ait plus rien",res:["RUN OUT","être à court"]},
+  {pv:"GIVE UP",v:["GIVE","donner"],p:["UP","abandon (drapeau blanc)"],img:"lever les bras et renoncer",res:["GIVE UP","abandonner"]},
+  {pv:"FIND OUT",v:["FIND","trouver"],p:["OUT","révélation"],img:"trouver une info cachée, la mettre au jour",res:["FIND OUT","découvrir"]},
+  {pv:"TURN DOWN",v:["TURN","tourner"],p:["DOWN","vers le bas / moins"],img:"baisser le niveau ou refuser",res:["TURN DOWN","baisser / refuser"]},
+  {pv:"PUT THROUGH",v:["PUT","mettre"],p:["THROUGH","connexion"],img:"faire passer la communication à travers",res:["PUT THROUGH","mettre en relation"]},
+  {pv:"GET ALONG",v:["GET","aller"],p:["ALONG","le long du chemin ensemble"],img:"avancer côte à côte sans heurts",res:["GET ALONG","bien s'entendre"]},
+  {pv:"CALL OFF",v:["CALL","appeler"],p:["OFF","couper / annuler"],img:"couper, désactiver l'événement",res:["CALL OFF","annuler"]},
+  {pv:"PUT TOGETHER",v:["PUT","mettre"],p:["TOGETHER","ensemble"],img:"mettre toutes les pièces ensemble",res:["PUT TOGETHER","assembler"]}
+];
+let discIdx=0;
+function discRender(){
+  const d=DISCOVERY[discIdx];
+  document.getElementById('discPv').textContent=d.pv;
+  document.getElementById('discQ').textContent="Que signifie ce phrasal verb ?";
+  document.getElementById('discReveal').classList.remove('show');
+  document.getElementById('discReveal').innerHTML="";
+  document.getElementById('discBtn').style.display="";
+}
+function discReveal(){
+  const d=DISCOVERY[discIdx];
+  const r=document.getElementById('discReveal');
+  r.innerHTML=`
+    <div class="eqline">
+      <div class="piece"><b>${d.v[0]}</b><span>${d.v[1]}</span></div>
+      <div class="op">+</div>
+      <div class="piece"><b>${d.p[0]}</b><span>${d.p[1]}</span></div>
+    </div>
+    <div style="color:var(--cyan);font-size:14px">🎨 Image mentale : « ${d.img} »</div>
+    <div class="op" style="font-size:30px">⬇</div>
+    <div class="result-pill">${d.res[0]} = <span class="fr">${d.res[1]}</span></div>`;
+  r.classList.add('show');
+  document.getElementById('discBtn').style.display="none";
+  sfx('reveal'); haptic([8,30,12]);
+  addXP(8);
+}
+function discNext(){ discIdx=(discIdx+1)%DISCOVERY.length; discRender(); }
+
+/* =========================================================
+   8. CONSTRUCTEUR
+   ========================================================= */
+const VERBS=["GET","TAKE","PUT","GO","COME","TURN","RUN","GIVE","BREAK","LOOK","CALL","HOLD"];
+const COMBOS={
+  "GET|UP":["GET = obtenir","UP = vers le haut","obtenir une position debout","se lever"],
+  "GET|OVER":["GET = obtenir","OVER = passer au-dessus","passer par-dessus un obstacle","se remettre de"],
+  "GET|OUT":["GET = aller","OUT = dehors","aller vers l'extérieur","sortir"],
+  "GET|ALONG":["GET = aller","ALONG = ensemble sur le chemin","avancer côte à côte","bien s'entendre"],
+  "GET|BACK":["GET = aller","BACK = retour","revenir au point de départ","revenir / récupérer"],
+  "TAKE|OFF":["TAKE = prendre","OFF = séparation","se détacher du sol","décoller / enlever"],
+  "TAKE|OVER":["TAKE = prendre","OVER = par-dessus","prendre la place de","prendre le contrôle"],
+  "TAKE|OUT":["TAKE = prendre","OUT = dehors","sortir quelque chose","sortir / emporter"],
+  "TAKE|IN":["TAKE = prendre","IN = à l'intérieur","faire entrer / absorber","comprendre / héberger"],
+  "PUT|OFF":["PUT = mettre","OFF = repousser","mettre plus loin dans le temps","reporter"],
+  "PUT|ON":["PUT = mettre","ON = sur / activer","poser sur soi","mettre (vêtement) / allumer"],
+  "PUT|UP":["PUT = mettre","UP = vers le haut","dresser vers le haut","ériger / héberger"],
+  "PUT|THROUGH":["PUT = mettre","THROUGH = connexion","faire passer à travers","mettre en relation"],
+  "PUT|TOGETHER":["PUT = mettre","TOGETHER = ensemble","réunir les pièces","assembler"],
+  "GO|ON":["GO = aller","ON = continuation","continuer d'avancer","continuer"],
+  "GO|OUT":["GO = aller","OUT = dehors","aller à l'extérieur","sortir"],
+  "GO|OVER":["GO = aller","OVER = par-dessus en détail","parcourir en entier","réviser"],
+  "GO|THROUGH":["GO = aller","THROUGH = à travers","traverser une épreuve","traverser / endurer"],
+  "GO|DOWN":["GO = aller","DOWN = vers le bas","descendre / chuter","baisser / couler"],
+  "COME|BACK":["COME = venir","BACK = retour","revenir vers ici","revenir"],
+  "COME|OVER":["COME = venir","OVER = par-dessus l'espace","venir de l'autre côté","passer (chez qqn)"],
+  "COME|UP":["COME = venir","UP = vers le haut/surface","surgir à la surface","surgir / se présenter"],
+  "COME|ALONG":["COME = venir","ALONG = sur le chemin","avancer / accompagner","progresser / venir avec"],
+  "TURN|ON":["TURN = tourner","ON = activer","activer l'interrupteur","allumer"],
+  "TURN|OFF":["TURN = tourner","OFF = désactiver","couper l'interrupteur","éteindre"],
+  "TURN|UP":["TURN = tourner","UP = vers le haut/plus","monter le niveau / apparaître","monter / arriver"],
+  "TURN|DOWN":["TURN = tourner","DOWN = moins","baisser le niveau / refuser","baisser / refuser"],
+  "TURN|AROUND":["TURN = tourner","AROUND = autour","pivoter sur soi","se retourner"],
+  "RUN|OUT":["RUN = courir","OUT = épuisement","aller jusqu'à plus rien","être à court"],
+  "RUN|AWAY":["RUN = courir","AWAY = loin","courir au loin","s'enfuir"],
+  "RUN|INTO":["RUN = courir","INTO = dans","entrer en collision","tomber sur (qqn)"],
+  "GIVE|UP":["GIVE = donner","UP = abandon","lever le drapeau blanc","abandonner"],
+  "GIVE|BACK":["GIVE = donner","BACK = retour","rendre en retour","rendre"],
+  "GIVE|AWAY":["GIVE = donner","AWAY = au loin","donner et s'en séparer","donner / offrir"],
+  "GIVE|OUT":["GIVE = donner","OUT = distribution","donner à chacun","distribuer"],
+  "BREAK|DOWN":["BREAK = casser","DOWN = arrêt","casser jusqu'à l'arrêt","tomber en panne"],
+  "BREAK|UP":["BREAK = casser","UP = en morceaux séparés","se séparer en morceaux","rompre / se séparer"],
+  "BREAK|OUT":["BREAK = casser","OUT = sortir","sortir en force","éclater / s'évader"],
+  "LOOK|UP":["LOOK = regarder","UP = vers le haut","lever les yeux / chercher","chercher (un mot)"],
+  "LOOK|OUT":["LOOK = regarder","OUT = vers l'extérieur","regarder le danger venir","faire attention"],
+  "LOOK|OVER":["LOOK = regarder","OVER = en entier","parcourir du regard","examiner"],
+  "LOOK|AFTER":["LOOK = regarder","AFTER = derrière/suivi","veiller sur","s'occuper de"],
+  "CALL|OFF":["CALL = appeler","OFF = annulation","couper l'événement","annuler"],
+  "CALL|BACK":["CALL = appeler","BACK = en retour","rappeler en retour","rappeler"],
+  "CALL|UP":["CALL = appeler","UP = activer le contact","faire venir par appel","téléphoner / mobiliser"],
+  "HOLD|ON":["HOLD = tenir","ON = maintien","continuer à tenir","attendre / s'accrocher"],
+  "HOLD|UP":["HOLD = tenir","UP = en l'air","tenir en l'air / bloquer","retarder / braquer"],
+  "HOLD|BACK":["HOLD = tenir","BACK = en arrière","tenir en arrière","retenir"]
+};
+let bVerb=null,bPart=null;
+function buildBuilder(){
+  document.getElementById('verbChips').innerHTML=VERBS.map(v=>`<button class="chip" data-v="${v}" onclick="pickVerb('${v}')">${v}</button>`).join('');
+  document.getElementById('partChips').innerHTML=ORDER.concat(["INTO","AFTER"]).map(p=>`<button class="chip" data-p="${p}" onclick="pickPart('${p}')">${p}</button>`).join('');
+}
+function pickVerb(v){ bVerb=v; document.querySelectorAll('#verbChips .chip').forEach(c=>c.classList.toggle('sel',c.dataset.v===v)); buildResult(); }
+function pickPart(p){ bPart=p; document.querySelectorAll('#partChips .chip').forEach(c=>c.classList.toggle('sel',c.dataset.p===p)); buildResult(); }
+function buildResult(){
+  const out=document.getElementById('buildOut');
+  if(!bVerb||!bPart){ out.innerHTML='<p style="color:var(--ink-dim)">Sélectionnez un verbe et une particule.</p>'; return; }
+  const key=bVerb+"|"+bPart;
+  const color=(DATA[bPart]&&DATA[bPart].color)||'#5b8cff';
+  if(COMBOS[key]){
+    const c=COMBOS[key];
+    out.innerHTML=`
+      <div class="eqline" style="margin-bottom:8px">
+        <div class="piece"><b>${bVerb}</b><span>${c[0].split('= ')[1]}</span></div>
+        <div class="op">+</div>
+        <div class="piece"><b>${bPart}</b><span>${c[1].split('= ')[1]}</span></div>
+      </div>
+      <div style="width:160px;height:130px;margin:10px auto">${svgFor((DATA[bPart]&&DATA[bPart].senses[0].anim)||'default',color)}</div>
+      <div style="color:var(--cyan);font-size:14px;margin:6px 0">🎨 Image : « ${c[2]} »</div>
+      <div class="result-pill">${bVerb} ${bPart} = <span class="fr">${c[3]}</span></div>`;
+    addXP(5);
+  } else {
+    const meaning=(DATA[bPart]&&DATA[bPart].gloss)||"";
+    out.innerHTML=`
+      <div class="eqline"><div class="piece"><b>${bVerb}</b></div><div class="op">+</div><div class="piece"><b>${bPart}</b><span>${meaning}</span></div></div>
+      <p style="color:var(--ink-dim);margin-top:14px">Cette combinaison précise n'est pas dans la base, mais souvenez-vous : la particule <b style="color:${color}">${bPart}</b> apporte l'idée de « ${meaning} ». Imaginez « ${bVerb.toLowerCase()} » dans cette direction.</p>`;
+  }
+}
+
+/* =========================================================
+   9. QUIZ
+   ========================================================= */
+const QUIZ_BANK=[
+  {q:"Quelle particule exprime la COMPLÉTION (jusqu'au bout) ?",a:"UP",opts:["UP","DOWN","BACK","ALONG"]},
+  {q:"Quelle particule exprime la SORTIE / l'extérieur ?",a:"OUT",opts:["IN","OUT","ON","OVER"]},
+  {q:"Quelle particule exprime la RÉCUPÉRATION (se remettre de) ?",a:"OVER",opts:["OFF","OVER","UNDER","IN"]},
+  {q:"Quelle particule exprime la CONNEXION (téléphone) ?",a:"THROUGH",opts:["AWAY","THROUGH","DOWN","ABOUT"]},
+  {q:"Quelle particule exprime l'ABANDON (give ___) ?",a:"UP",opts:["UP","OUT","OFF","BACK"]},
+  {q:"Quelle particule exprime la DÉSACTIVATION (turn ___) ?",a:"OFF",opts:["ON","OFF","UP","IN"]},
+  {q:"Quelle particule exprime le RETOUR au point de départ ?",a:"BACK",opts:["AWAY","BACK","THROUGH","OVER"]},
+  {q:"Quelle particule exprime l'idée d'ENSEMBLE / assembler ?",a:"TOGETHER",opts:["ALONG","AROUND","TOGETHER","ABOUT"]},
+  {q:"Quelle particule exprime la DIMINUTION (turn ___ le son) ?",a:"DOWN",opts:["UP","DOWN","OFF","OUT"]},
+  {q:"Quelle particule exprime la CONTINUATION (carry ___) ?",a:"ON",opts:["ON","OFF","OVER","IN"]},
+  {q:"Quelle particule exprime l'ÉLOIGNEMENT (run ___) ?",a:"AWAY",opts:["AWAY","BACK","IN","ON"]},
+  {q:"Quelle particule signifie « bien s'ENTENDRE » (get ___) ?",a:"ALONG",opts:["AROUND","ALONG","ABOUT","UNDER"]}
+];
+let quizPool=[],quizI=0,quizScore=0;
+function startQuiz(){
+  quizPool=[...QUIZ_BANK].sort(()=>Math.random()-.5).slice(0,8);
+  quizI=0;quizScore=0;renderQuiz();
+}
+function renderQuiz(){
+  const card=document.getElementById('quizCard');
+  if(quizI>=quizPool.length){
+    const pct=Math.round(quizScore/quizPool.length*100);
+    card.innerHTML=`<div class="quiz-result">
+      <div class="big">${quizScore}/${quizPool.length}</div>
+      <p style="font-size:18px;margin:6px 0">${pct>=75?'🏆 Excellent !':pct>=50?'👍 Bien joué !':'💪 Continuez à pratiquer !'}</p>
+      <p style="color:var(--ink-dim)">Vous avez gagné ${quizScore*10} XP</p>
+      <button class="btn btn-primary" onclick="startQuiz()" style="margin-top:12px">↻ Rejouer</button>
+    </div>`;
+    return;
+  }
+  const item=quizPool[quizI];
+  const opts=[...item.opts].sort(()=>Math.random()-.5);
+  card.innerHTML=`
+    <div class="quiz-prog"><span>Question ${quizI+1} / ${quizPool.length}</span><span>Score : ${quizScore}</span></div>
+    <div class="bar"><i style="width:${quizI/quizPool.length*100}%"></i></div>
+    <div class="quiz-q">${item.q}</div>
+    <div class="quiz-opts">
+      ${opts.map((o,k)=>`<button class="qopt" onclick="answerQuiz(this,'${o}','${item.a}')"><span class="k">${String.fromCharCode(65+k)}</span>${o}</button>`).join('')}
+    </div>`;
+}
+function answerQuiz(btn,chosen,correct){
+  document.querySelectorAll('.qopt').forEach(b=>{ b.disabled=true;
+    if(b.textContent.trim().endsWith(correct)) b.classList.add('correct');
+  });
+  if(chosen===correct){ btn.classList.add('correct'); quizScore++; sfx('correct'); haptic([10,40,10]); addXP(10); }
+  else { btn.classList.add('wrong'); sfx('wrong'); haptic([30,40,30]); }
+  setTimeout(()=>{ quizI++; renderQuiz(); },1100);
+}
+
+/* =========================================================
+   10. FLASHCARDS
+   ========================================================= */
+const CARDS=[
+  {pv:"PICK UP",fr:"ramasser / aller chercher",ex:"I'll pick up the kids at 5.",anim:"rise",c:"#5b8cff"},
+  {pv:"GIVE UP",fr:"abandonner",ex:"Don't give up now!",anim:"flag",c:"#5b8cff"},
+  {pv:"FIND OUT",fr:"découvrir",ex:"I found out the truth.",anim:"reveal",c:"#ff5cae"},
+  {pv:"RUN OUT",fr:"être à court",ex:"We ran out of milk.",anim:"bulboff",c:"#ff5cae"},
+  {pv:"GET OVER",fr:"se remettre de",ex:"She got over the flu.",anim:"recover",c:"#7c5cff"},
+  {pv:"TURN DOWN",fr:"baisser / refuser",ex:"He turned down the offer.",anim:"chartdown",c:"#34e1ff"},
+  {pv:"CARRY ON",fr:"continuer",ex:"Carry on, you're doing great.",anim:"continue",c:"#ffd166"},
+  {pv:"TAKE OFF",fr:"décoller / enlever",ex:"The plane took off.",anim:"depart",c:"#ff6b6b"},
+  {pv:"GET ALONG",fr:"bien s'entendre",ex:"They get along well.",anim:"accompany",c:"#34e1ff"},
+  {pv:"PUT TOGETHER",fr:"assembler",ex:"I put together the report.",anim:"assemble",c:"#39e6a8"},
+  {pv:"COME BACK",fr:"revenir",ex:"Come back soon!",anim:"return",c:"#39e6a8"},
+  {pv:"GO THROUGH",fr:"traverser / endurer",ex:"She went through a hard time.",anim:"tunnel",c:"#5b8cff"},
+  {pv:"HOLD ON",fr:"attendre / s'accrocher",ex:"Hold on a second.",anim:"stick",c:"#ffd166"},
+  {pv:"CALL OFF",fr:"annuler",ex:"They called off the match.",anim:"poweroff",c:"#ff6b6b"},
+  {pv:"FILL IN",fr:"remplir (formulaire)",ex:"Fill in the blanks.",anim:"fillin",c:"#39e6a8"}
+];
+let fcI=0,fcFlipped=false;
+function renderCard(){
+  const c=CARDS[fcI];
+  document.getElementById('fcPv').textContent=c.pv;
+  document.getElementById('fcPv').style.background=`linear-gradient(120deg,#fff,${c.c})`;
+  document.getElementById('fcPv').style.webkitBackgroundClip='text';
+  document.getElementById('fcBack').innerHTML=`
+    <div style="width:150px;height:120px">${svgFor(c.anim,c.c)}</div>
+    <div class="fr">${c.fr}</div>
+    <div class="ex">“${c.ex}”</div>`;
+  document.getElementById('fcCount').textContent=(fcI+1)+" / "+CARDS.length;
+  document.getElementById('flashcard').classList.remove('flip'); fcFlipped=false;
+}
+let _lastSwipe=0;
+function flipCard(){ if(Date.now()-_lastSwipe<350) return; fcFlipped=!fcFlipped; document.getElementById('flashcard').classList.toggle('flip',fcFlipped); sfx('flip'); haptic(10); }
+function fcNext(){ fcI=(fcI+1)%CARDS.length; renderCard(); }
+function fcPrev(){ fcI=(fcI-1+CARDS.length)%CARDS.length; renderCard(); }
+function fcKnow(){ const id=CARDS[fcI].pv; if(!STATE.knownCards[id]){ STATE.knownCards[id]=true; addXP(10); toast("✅","Carte maîtrisée",id);} fcNext(); }
+
+/* =========================================================
+   11. CARTE GÉANTE
+   ========================================================= */
+function buildMind(){
+  const mind=document.getElementById('mind');
+  const cx=380,cy=260,R=200;
+  let html=`<div class="mnode center" style="left:${cx}px;top:${cy}px">PHRASAL VERBS<small>16 particules</small></div>`;
+  ORDER.forEach((p,i)=>{
+    const ang=(i/ORDER.length)*Math.PI*2 - Math.PI/2;
+    const x=cx+Math.cos(ang)*R, y=cy+Math.sin(ang)*(R*0.9);
+    const d=DATA[p];
+    html+=`<svg style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0"><line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${d.color}" stroke-width="1.5" stroke-opacity=".35"/></svg>`;
+    html+=`<div class="mnode" style="left:${x}px;top:${y}px;color:${d.color}" onclick="go('particle','${p}')">${p}<small>${d.senses.length} sens</small></div>`;
+  });
+  mind.innerHTML=html;
+  mind.style.width=(cx*2)+'px'; mind.style.height=(cy*2+40)+'px';
+}
+
+/* =========================================================
+   12. TOAST
+   ========================================================= */
+function toast(ic,title,sub){
+  const wrap=document.getElementById('toasts');
+  const el=document.createElement('div'); el.className='toast';
+  el.innerHTML=`<div class="ic">${ic}</div><div><b>${title}</b><span>${sub||''}</span></div>`;
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.style.transition='.4s'; el.style.opacity='0'; el.style.transform='translateX(40px)'; setTimeout(()=>el.remove(),400); },2800);
+}
+
+/* =========================================================
+   13. FOND ANIMÉ (particules canvas)
+   ========================================================= */
+(function(){
+  const cv=document.getElementById('bgCanvas'),ctx=cv.getContext('2d');
+  let W,H,pts,mobile=false,linkDist=13000;
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1, mobile?1.5:2);
+    W=innerWidth;H=innerHeight;
+    cv.width=W*dpr; cv.height=H*dpr; cv.style.width=W+'px'; cv.style.height=H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    mobile=W<=768;
+    // moins de particules + moins de liens sur mobile (perf Android/iPhone)
+    const density=mobile?30000:16000, cap=mobile?34:90;
+    linkDist=mobile?9000:13000;
+    const n=Math.min(cap,Math.floor(W*H/density));
+    pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.8+.6}));
+  }
+  mobile=innerWidth<=768; resize();
+  let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(resize,200);},{passive:true});
+  // pause quand l'onglet est masqué (économie de batterie)
+  let visible=true; document.addEventListener('visibilitychange',()=>{visible=!document.hidden; if(visible) requestAnimationFrame(loop);});
+  function loop(){
+    // mode économie : on stoppe entièrement le fond animé
+    if(document.body.classList.contains('lowpower')){ ctx.clearRect(0,0,W,H); return; }
+    if(!visible) return;
+    ctx.clearRect(0,0,W,H);
+    for(const p of pts){
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle='rgba(140,170,255,.55)';ctx.fill();
+    }
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
+      if(d<linkDist){ ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle='rgba(91,140,255,'+(0.16*(1-d/linkDist))+')';ctx.lineWidth=1;ctx.stroke(); }
+    }
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* =========================================================
+   14. INIT
+   ========================================================= */
+detectPerf();
+buildGrid(); buildBuilder(); buildMind(); refreshHUD();
+attachRipple();
+// état initial du bouton son
+(function(){ const b=document.getElementById('sndBtn'); if(b){ b.textContent=AUDIO.on?'🔊':'🔇'; b.classList.toggle('off',!AUDIO.on);} })();
+// déverrouillage de l'audio au tout premier geste (politique navigateurs mobiles)
+['touchstart','pointerdown','keydown'].forEach(ev=>window.addEventListener(ev,unlockAudio,{once:false,passive:true}));
+
+document.addEventListener('keydown',e=>{
+  if(document.getElementById('view-flash').classList.contains('show')){
+    if(e.key==='ArrowRight')fcNext(); if(e.key==='ArrowLeft')fcPrev(); if(e.key===' '){e.preventDefault();flipCard();}
+  }
+});
+
+/* navigation par glissement horizontal entre flashcards (mobile) */
+(function(){
+  const stage=document.querySelector('.fc-stage'); if(!stage) return;
+  let x0=null;
+  stage.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
+  stage.addEventListener('touchend',e=>{
+    if(x0===null) return; const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>55){ _lastSwipe=Date.now(); dx<0?fcNext():fcPrev(); haptic(8); } x0=null;
+  },{passive:true});
+})();
+</script>
+</body>
+</html>
